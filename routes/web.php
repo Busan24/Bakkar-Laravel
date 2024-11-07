@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\KontenController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Authentication\AuthController;
+use App\Http\Controllers\User\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
 
 // Rute untuk pengguna yang belum login
 Route::middleware('guest')->group(function () {
@@ -50,9 +50,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/banner/store', [BannerController::class, 'store'])->name('banner.store');
     Route::put('/banner/{id}', [BannerController::class, 'update'])->name('banner.update');
     Route::delete('/banner/{id}', [BannerController::class, 'destroy'])->name('banner.destroy');
-
-    // Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('editprofile');
-    // Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
 });
 
 // Rute untuk logout

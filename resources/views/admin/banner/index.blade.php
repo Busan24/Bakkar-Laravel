@@ -11,10 +11,6 @@
 <!-- cards -->
     <div class="relative flex flex-col w-full min-w-0 mb-0 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border" style="margin-top: 20px">
         <div class="ml-2 mt-2 pb-0 mb-0 bg-white rounded-t-2xl">
-            <!-- Tombol Tambah Kategori Produk -->
-            {{-- <button class="inline-block px-2 py-2 my-4 text-sm font-bold text-center text-white bg-orange-500 rounded-lg" data-modal-toggle="addCategoryModal">
-                Tambahkan Data Category Produk
-            </button> --}}
             <a href="javascript:void(0)" data-toggle="modal" data-target="#addContentModal" 
                 class="inline-flex items-center px-4 py-2 my-4 text-sm font-bold text-center text-white align-middle transition-all ease-in border-0 rounded-lg shadow-soft-md bg-140 bg-x-25 leading-pro hover:shadow-soft-2xl hover:scale-102"  
                 style="background-color: #fb923c">
@@ -154,6 +150,7 @@
             </table>
         </div>
     </div>
+
     <!-- Bootstrap core JavaScript-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('library/jquery/jquery.min.js') }}"></script>
@@ -242,7 +239,7 @@
         reader.readAsDataURL(file);
     });
 
-       // Validasi sebelum mengirim form untuk Edit
+    // Validasi sebelum mengirim form untuk Edit
     document.getElementById('editContentForm').addEventListener('submit', function (event) {
     const judulKonten = document.getElementById('edit_judul_konten').value;
     const gambar = document.getElementById('edit_gambar').files.length;
@@ -266,8 +263,8 @@
             text: 'Gambar lama harus ada!',
             confirmButtonText: 'OK'
         });
-    }
-});
+        }
+    });
         $('#editContentModal').on('hidden.bs.modal', function () {
         $('#edit_judul_konten').val('');
         $('#edit_gambar').val('');
@@ -292,16 +289,14 @@
             // Kirim form untuk menghapus
             button.closest('form').submit();
         }
+        });
     });
-});
-
-
     </script>
 
 @if (session('success'))
 <script>
     Swal.fire({
-        position: 'top-end',
+        position: 'center',
         icon: 'success',
         title: "{{ session('success') }}",
         showConfirmButton: false,

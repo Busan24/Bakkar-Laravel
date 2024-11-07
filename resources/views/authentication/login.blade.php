@@ -1,4 +1,5 @@
 @include('layout.auth.link') 
+<script src="https://cdn.tailwindcss.com"></script>
 <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-bakkar.png') }}" />
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <div class="font-sans text-gray-900 antialiased">
@@ -6,8 +7,7 @@
       <div class="flex justify-center">
         <img src="{{ asset('assets/img/logo-bakkar.png') }}" class="inline h-16 w-auto max-w-full transition-all duration-200 ease-nav-brand" alt="main_logo" />
     </div>
-    
-  
+
       <div class="w-full sm:max-w-md mt-6 px-8 py-6 bg-white shadow-md overflow-hidden sm:rounded-lg">
         <form method="POST" id="loginForm" action="{{ route('login') }}">
             @csrf        

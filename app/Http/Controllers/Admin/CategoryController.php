@@ -18,9 +18,9 @@ class CategoryController extends Controller
     public function store(Request $request) {
         $request->validate([
             'name' => 'required|string|max:40',
+            'color' => 'required|string',
         ]);
     
-        // Cek apakah kategori sudah ada
         $existingCategory = Category::where('name', $request->name)->first();
         if ($existingCategory) {
             return redirect()->route('category')->with('error', 'Category Produk sudah ada!');
@@ -28,6 +28,7 @@ class CategoryController extends Controller
     
         Category::create([
             'name' => $request->name,
+            'color' => $request->color,
         ]);
     
         return redirect()->route('category')->with('success', 'Category Berhasil Ditambahkan!');
@@ -45,19 +46,18 @@ class CategoryController extends Controller
     public function update(Request $request, $id) {
         $request->validate([
             'name' => 'required|string|max:40',
+            'color' => 'required|string',
         ]);
     
         $category = Category::findOrFail($id);
-    
-        // Cek apakah ada kategori lain dengan nama yang sama
         $existingCategory = Category::where('name', $request->name)->where('id', '!=', $id)->first();
         if ($existingCategory) {
             return redirect()->route('category')->with('error', 'Category Produk sudah ada!');
         }
     
-        // Update kategori
         $category->update([
             'name' => $request->name,
+            'color' => $request->color,
         ]);
     
         return redirect()->route('category')->with('success', 'Category Berhasil Diperbarui!');

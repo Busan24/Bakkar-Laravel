@@ -15,10 +15,13 @@ class ProductController extends Controller
 {
     // Ambil data produk dengan relasi kategori
     $products = Product::with('category')->get();
+     // Ambil semua kategori
+     $categories = Category::all();
     
     // Return view dengan header anti-cache
     return response()->view('admin.produk.index', [
             "products" => $products,
+            "categories" => $categories,
         ])
         ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
         ->header('Pragma', 'no-cache')

@@ -10,10 +10,6 @@
     <h2>Category Produk</h2>
     <div class="relative flex flex-col w-full min-w-0 mb-0 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border" style="margin-top: 20px">
         <div class="ml-2 mt-2 pb-0 mb-0 bg-white rounded-t-2xl">
-            <!-- Tombol Tambah Kategori Produk -->
-            {{-- <button class="inline-block px-2 py-2 my-4 text-sm font-bold text-center text-white bg-orange-500 rounded-lg" data-modal-toggle="addCategoryModal">
-                Tambahkan Data Category Produk
-            </button> --}}
             <a href="javascript:void(0)" data-toggle="modal" data-target="#addCategoryModal"  class="inline-block inline-flex items-center justify-center px-2 py-2 my-4 text-sm font-bold text-center text-white align-middle transition-all ease-in border-0 rounded-lg select-none shadow-soft-md bg-140 bg-x-25 leading-pro  
             hover:shadow-soft-2xl hover:scale-102"  style="background-color: #fb923c">
                 <!-- Ikon SVG sebelum teks tombol -->
@@ -47,6 +43,10 @@
                                 <label for="nama_kategori">Nama Kategori</label>
                                 <input type="text" class="form-control" id="nama_kategori" name="name" required>
                             </div>
+                            <div class="form-group">
+                                <label for="color">Warna Kategori</label>
+                                <input type="color" class="form-control" id="color" name="color" required>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -75,6 +75,10 @@
                                 <label for="edit_nama_kategori">Nama Kategori</label>
                                 <input type="text" class="form-control" id="edit_nama_kategori" name="name" required>
                             </div>
+                            <div class="form-group">
+                                <label for="edit_color">Warna Kategori</label>
+                                <input type="color" class="form-control" id="edit_color" name="color" required>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -90,6 +94,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-3">No</th>
                         <th scope="col" class="px-6 py-3">Category</th>
+                        <th scope="col" class="px-6 py-3">Warna</th>
                         <th scope="col" class="px-6 py-3">Action</th>
                     </tr>
                 </thead>
@@ -97,16 +102,23 @@
                     @foreach($categories as $key => $category)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="p-4">{{ $key + 1 }}</td> <!-- Menampilkan nomor urut -->
-                            <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">{{ $category->name }}</td>
+                            <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                {{ $category->name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span style="display: inline-block; width: 24px; height: 24px; background-color: {{ $category->color }}; border-radius: 4px;"></span>
+                            </td>                                   
                             <td class="py-4 text-center">
                                 <div class="flex space-x-2">
                                     <!-- Tombol Edit -->
                                     <a href="javascript:void(0)" 
-                                        class="edit-btn text-white px-4 rounded hover:bg-orange-600 focus:outline-none focus:ring focus:ring-orange-300 flex items-center transition-all ease-in border-0 rounded-lg select-none shadow-soft-md bg-140 bg-x-25 leading-pro  
-                                        hover:shadow-soft-2xl hover:scale-102" 
-                                        style="background-color: #fb923c; height: 28px;margin-left: 20px;" 
-                                        data-id="{{ $category->id }}" data-name="{{ $category->name }}">
-                                            <i class="fas fa-edit mr-1"></i> Edit
+                                    class="edit-btn text-white px-4 rounded hover:bg-orange-600 focus:outline-none focus:ring focus:ring-orange-300 flex items-center transition-all ease-in border-0 rounded-lg select-none shadow-soft-md bg-140 bg-x-25 leading-pro  
+                                    hover:shadow-soft-2xl hover:scale-102" 
+                                    style="background-color: #fb923c; height: 28px; margin-left: 20px;" 
+                                    data-id="{{ $category->id }}" 
+                                    data-name="{{ $category->name }}" 
+                                    data-color="{{ $category->color }}"> <!-- Tambahkan data warna -->
+                                        <i class="fas fa-edit mr-1"></i> Edit
                                     </a>
                                     <!-- Tombol Hapus -->
                                     <form action="{{ route('category.destroy', $category->id) }}" method="POST" class="inline deleteForm">
@@ -156,11 +168,14 @@
         $('.edit-btn').on('click', function() {
             var id = $(this).data('id');
             var nama = $(this).data('name');
+            var color = $(this).data('color'); // Ambil data warna
 
             $('#editCategoryModal').modal('show');
             $('#edit_nama_kategori').val(nama);
+            $('#edit_color').val(color); // Set nilai warna di input color pada modal edit
             $('#editCategoryForm').attr('action', `{{ route('category.update', '') }}/${id}`);
         });
+
 
         // Validasi Form Edit
         $('#editCategoryForm').on('submit', function(e) {
@@ -204,38 +219,35 @@
             });
         });
     });
+    </script>
     
+    @if (session('success'))
+    <script>
+        if (performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD) {
+            // Jika user kembali menggunakan tombol back browser, jangan tampilkan alert
+            console.log("Notifikasi sukses tidak akan ditampilkan karena kembali dari cache.");
+        } else {
+            // Tampilkan notifikasi jika halaman dimuat normal
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    </script>
+    @endif
 
-</script>
-    
-
-@if (session('success'))
-<script>
-    if (performance.navigation.type === performance.navigation.TYPE_BACK_FORWARD) {
-        // Jika user kembali menggunakan tombol back browser, jangan tampilkan alert
-        console.log("Notifikasi sukses tidak akan ditampilkan karena kembali dari cache.");
-    } else {
-        // Tampilkan notifikasi jika halaman dimuat normal
+    @if (session('error'))
+    <script>
         Swal.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: "{{ session('success') }}",
-            showConfirmButton: false,
-            timer: 1500
+            icon: 'warning',
+            title: 'Oops...',
+            text: "{{ session('error') }}",
+            confirmButtonColor: '#d33',
         });
-    }
-</script>
-@endif
-
-@if (session('error'))
-<script>
-    Swal.fire({
-        icon: 'warning',
-        title: 'Oops...',
-        text: "{{ session('error') }}",
-        confirmButtonColor: '#d33',
-    });
-</script>
-@endif
+    </script>
+    @endif
 
 @endsection

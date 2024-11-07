@@ -11,10 +11,6 @@
 <!-- cards -->
     <div class="relative flex flex-col w-full min-w-0 mb-0 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border" style="margin-top: 20px">
         <div class="ml-2 mt-2 pb-0 mb-0 bg-white rounded-t-2xl">
-            <!-- Tombol Tambah Kategori Produk -->
-            {{-- <button class="inline-block px-2 py-2 my-4 text-sm font-bold text-center text-white bg-orange-500 rounded-lg" data-modal-toggle="addCategoryModal">
-                Tambahkan Data Category Produk
-            </button> --}}
             <a href="javascript:void(0)" data-toggle="modal" data-target="#addContentModal" 
                 class="inline-flex items-center px-4 py-2 my-4 text-sm font-bold text-center text-white align-middle transition-all ease-in border-0 rounded-lg shadow-soft-md bg-140 bg-x-25 leading-pro hover:shadow-soft-2xl hover:scale-102"  
                 style="background-color: #fb923c">
@@ -82,7 +78,7 @@
                                 <input type="text" class="form-control" id="edit_judul_konten" name="judul_konten" required>
                             </div>
                             <div class="form-group">
-                                <label for="edit_isi_konten">Isi</label>
+                                <label for="edit_isi_konten">Link Youtube</label>
                                 <textarea class="form-control" id="edit_isi_konten" name="isi_konten" required></textarea>
                             </div>
                         </div>
@@ -249,13 +245,13 @@
             $('#edit_judul_konten').val('');
             $('#edit_isi_konten').val('');
         });
-</script>
+    </script>
 
 
 @if (session('success'))
     <script>
         Swal.fire({
-            position: 'top-end',
+            position: 'center',
             icon: 'success',
             title: "{{ session('success') }}",
             showConfirmButton: false,
