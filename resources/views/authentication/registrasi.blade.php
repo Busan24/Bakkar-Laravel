@@ -2,6 +2,8 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <title>Registrasi</title>
 </head>
 
@@ -9,7 +11,6 @@
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
 <div class="font-sans text-gray-900 antialiased">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
@@ -51,11 +52,11 @@
           </div>
   
           <div class="flex items-center justify-end mt-4">
-            <button type="submit" class="w-full py-3 px-4 text-sm tracking-wider font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+            <button type="submit" class="w-full py-3 px-4 text-sm tracking-wider font-semibold rounded-md text-white bg-orange-400 hover:bg-orange-600 focus:outline-none">
                 Registrasi
               </button>
           </div>
-          <p class="text-gray-800 text-sm mt-6 text-center">Already have an account? <a href="{{ route('login') }}" class="text-blue-600 font-semibold hover:underline ml-1">Login here</a></p>
+          <p class="text-gray-800 text-sm mt-6 text-center">Already have an account? <a href="{{ route('login') }}" class="text-orange-400 font-semibold hover:underline ml-1">Login here</a></p>
         </form>
       </div>
     </div>

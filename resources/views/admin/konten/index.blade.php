@@ -97,7 +97,7 @@
                     <tr>
                         <th scope="col" class="px-6 py-3">No</th>
                         <th scope="col" class="px-6 py-3">Judul</th>
-                        <th scope="col" class="px-6 py-3">Isi</th>
+                        <th scope="col" class="px-6 py-3">Link Youtube</th>
                         <th scope="col" class="px-6 py-3">Action</th>
                     </tr>
                 </thead>

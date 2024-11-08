@@ -8,25 +8,9 @@
 
 @section('content')
 <!-- cards -->
-    <h2>User</h2>
+    <h2>Admin</h2>
     <div class="relative flex flex-col w-full min-w-0 mb-0 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border" style="margin-top: 20px">
-        <div class="ml-2 mt-2 pb-0 mb-0 bg-white rounded-t-2xl">
-            {{-- <a class="inline-block px-2 py-2 my-4 text-sm font-bold text-center text-white align-middle transition-all ease-in border-0 rounded-lg select-none shadow-soft-md bg-140 bg-x-25 leading-pro  
-            hover:shadow-soft-2xl hover:scale-102"  style="background-color: #fb923c" href="/createproduk">
-                <!-- Ikon SVG sebelum teks tombol -->
-                <svg class="inline-block w-4 h-4 mr-2 fill-current text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 292.377 292.377" xml:space="preserve">
-                    <g>
-                        <path d="M146.188,0C65.576,0,0,65.582,0,146.188s65.576,146.188,146.188,146.188
-                            s146.188-65.582,146.188-146.188S226.801,0,146.188,0z M194.962,152.155h-42.806v42.8c0,3.3-2.667,5.967-5.967,5.967
-                            c-3.3,0-5.967-2.667-5.967-5.967v-42.8H97.415c-3.294,0-5.967-2.673-5.967-5.967s2.673-5.967,5.967-5.967h42.806V97.415
-                            c0-3.294,2.667-5.967,5.967-5.967c3.3,0,5.967,2.673,5.967,5.967v42.806h42.806c3.3,0,5.967,2.673,5.967,5.967
-                            S198.261,152.155,194.962,152.155z"/>
-                    </g>
-                </svg>
-                Tambahkan Data User
-            </a>
-        </div> --}}
-        
+        <div class="ml-2 mt-2 pb-0 mb-0 bg-white rounded-t-2xl">       
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

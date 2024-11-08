@@ -29,11 +29,11 @@
           </div>
   
           <div class="flex items-center justify-end mt-4">
-            <button type="submit" class="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+            <button type="submit" class="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-orange-400 hover:bg-orange-600 focus:outline-none">
                 Login
               </button>
           </div>
-          <p class="mt-2 text-gray-800 text-sm !mt-8 text-center">Don't have an account? <a href="{{ route('register') }}" class="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold">Register here</a></p>
+          <p class="mt-2 text-gray-800 text-sm !mt-8 text-center">Don't have an account? <a href="{{ route('register') }}" class="text-orange-400 hover:underline ml-1 whitespace-nowrap font-semibold">Register here</a></p>
         </form>
       </div>
     </div>
