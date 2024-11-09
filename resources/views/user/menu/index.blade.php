@@ -60,8 +60,9 @@
     </div>
 </section>
 
-<x-cart />
+
 <x-footer />
+<x-cart />
 <script src="/assets/js/cart.js"></script>
 </body>
 </html>
