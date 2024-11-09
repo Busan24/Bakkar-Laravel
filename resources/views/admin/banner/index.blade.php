@@ -161,31 +161,87 @@
     <script src="//cdn.ckeditor.com/4.22.1/basic/ckeditor.js"></script>
 
     <script>
-        // Preview gambar sebelum upload
+        // Fungsi untuk mengompres gambar menggunakan canvas
+        function compressImage(file, maxSizeKB, callback) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+    
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+    
+                    // Mengatur ukuran canvas sesuai dengan ukuran gambar asli
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+    
+                    // Mengatur kualitas kompresi
+                    let quality = 0.7;
+                    let base64String = canvas.toDataURL('image/jpeg', quality);
+                    let sizeInKB = Math.round((base64String.length * 3 / 4) / 1024);
+    
+                    // Lakukan kompresi bertahap sampai ukuran kurang dari maxSizeKB
+                    while (sizeInKB > maxSizeKB) {
+                        quality -= 0.05;
+                        base64String = canvas.toDataURL('image/jpeg', quality);
+                        sizeInKB = Math.round((base64String.length * 3 / 4) / 1024);
+                    }
+    
+                    // Konversi hasil kompresi ke file blob dan panggil callback
+                    fetch(base64String)
+                        .then(res => res.blob())
+                        .then(blob => {
+                            const compressedFile = new File([blob], file.name, { type: 'image/jpeg' });
+                            callback(compressedFile);
+                        });
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    
+        // Preview gambar sebelum upload dengan kompresi
         document.getElementById('gambar').addEventListener('change', function (event) {
             const file = event.target.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function (e) {
-                const preview = document.getElementById('previewImage');
-                preview.src = e.target.result;
-                preview.style.width = '100%';  // Set to match the dimensions of emptyImage.png
-                preview.style.height = '300px'; // Set to match the dimensions of emptyImage.png
-                preview.style.display = 'block'; // Tampilkan gambar
+            const maxSizeKB = 2048;
+    
+            if (file && file.size / 1024 > maxSizeKB) {
+                compressImage(file, maxSizeKB, function (compressedFile) {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(compressedFile);
+                    document.getElementById('gambar').files = dataTransfer.files;
+    
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const preview = document.getElementById('previewImage');
+                        preview.src = e.target.result;
+                        preview.style.width = '100%';
+                        preview.style.height = '300px';
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(compressedFile);
+                });
+            } else {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('previewImage');
+                    preview.src = e.target.result;
+                    preview.style.width = '100%';
+                    preview.style.height = '300px';
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
             }
-            
-            reader.readAsDataURL(file);
         });
-
+    
         // Validasi sebelum mengirim form
         document.getElementById('addContentForm').addEventListener('submit', function (event) {
-            // Mengambil nilai dari input
             const judulKonten = document.getElementById('judul_konten').value;
             const gambar = document.getElementById('gambar').files.length;
-
-            // Memeriksa apakah semua kolom terisi
+    
             if (!judulKonten || gambar === 0) {
-                event.preventDefault(); // Mencegah pengiriman form
+                event.preventDefault();
                 Swal.fire({
                     icon: 'error',
                     title: 'Gagal!',
@@ -194,104 +250,112 @@
                 });
             }
         });
-
+    
         // Bersihkan form saat modal ditutup
         $('#addContentModal').on('hidden.bs.modal', function () {
-            // Reset input teks
             $('#judul_konten').val('');
-            // Reset input file
             $('#gambar').val('');
-            // Kembalikan preview gambar ke gambar default
             $('#previewImage').attr('src', '{{ asset("assets/img/emptyImage.png") }}');
         });
-
+    
         $(document).on('click', '.edit-btn', function () {
-        var id = $(this).data('id');
-        var isi = $(this).data('isi');
-        var gambar = $(this).data('gambar');
-
-        $('#edit_judul_konten').val(isi);
-        $('#previewEditImage').attr('src', gambar); // Tampilkan gambar lama
-        $('#old_image').val(gambar.split('/').pop()); // Ambil nama file gambar lama
-
-        // Update action URL form
-        $('#editContentForm').attr('action', `{{ route('banner.update', '') }}/${id}`);
-        $('#editContentModal').modal('show');
-
-        previewEditImage.src = gambar; // Set the source to the existing image
-        previewEditImage.style.width = '100%'; // Set the width to 100%
-        previewEditImage.style.height = '300px'; // Set a fixed height
-        previewEditImage.style.objectFit = 'contain'; // Maintain aspect ratio
-    });
-
-     document.getElementById('edit_gambar').addEventListener('change', function (event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-            const preview = document.getElementById('previewEditImage');
-            preview.src = e.target.result;
-            preview.style.width = '100%';
-            preview.style.height = '300px';
-            preview.style.display = 'block';
-        }
-
-        reader.readAsDataURL(file);
-    });
-
-    // Validasi sebelum mengirim form untuk Edit
-    document.getElementById('editContentForm').addEventListener('submit', function (event) {
-    const judulKonten = document.getElementById('edit_judul_konten').value;
-    const gambar = document.getElementById('edit_gambar').files.length;
-    const oldImage = document.getElementById('old_image').value;
-
-    if (!judulKonten) {
-        event.preventDefault();
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal!',
-            text: 'Kolom isi harus terisi!',
-            confirmButtonText: 'OK'
+            var id = $(this).data('id');
+            var isi = $(this).data('isi');
+            var gambar = $(this).data('gambar');
+    
+            $('#edit_judul_konten').val(isi);
+            $('#previewEditImage').attr('src', gambar);
+            $('#old_image').val(gambar.split('/').pop());
+    
+            $('#editContentForm').attr('action', `{{ route('banner.update', '') }}/${id}`);
+            $('#editContentModal').modal('show');
         });
-    }
-    // Jika gambar tidak diupload, pastikan oldImage terisi
-    else if (gambar === 0 && !oldImage) {
-        event.preventDefault();
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal!',
-            text: 'Gambar lama harus ada!',
-            confirmButtonText: 'OK'
+    
+        document.getElementById('edit_gambar').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const maxSizeKB = 2048;
+    
+            if (file && file.size / 1024 > maxSizeKB) {
+                compressImage(file, maxSizeKB, function (compressedFile) {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(compressedFile);
+                    document.getElementById('edit_gambar').files = dataTransfer.files;
+    
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const preview = document.getElementById('previewEditImage');
+                        preview.src = e.target.result;
+                        preview.style.width = '100%';
+                        preview.style.height = '300px';
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(compressedFile);
+                });
+            } else {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('previewEditImage');
+                    preview.src = e.target.result;
+                    preview.style.width = '100%';
+                    preview.style.height = '300px';
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
         });
-        }
-    });
+    
+        // Validasi sebelum mengirim form untuk Edit
+        document.getElementById('editContentForm').addEventListener('submit', function (event) {
+            const judulKonten = document.getElementById('edit_judul_konten').value;
+            const gambar = document.getElementById('edit_gambar').files.length;
+            const oldImage = document.getElementById('old_image').value;
+    
+            if (!judulKonten) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Kolom isi harus terisi!',
+                    confirmButtonText: 'OK'
+                });
+            } else if (gambar === 0 && !oldImage) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Gambar lama harus ada!',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    
         $('#editContentModal').on('hidden.bs.modal', function () {
-        $('#edit_judul_konten').val('');
-        $('#edit_gambar').val('');
-        $('#previewEditImage').attr('src', '');
-    });
-    $(document).on('click', '.delete-btn', function () {
-    const button = $(this);
-    const id = button.data('id');
-
-    // SweetAlert konfirmasi
-    Swal.fire({
-        title: 'Konfirmasi Hapus',
-        text: "Apakah Anda yakin ingin menghapus banner ini?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Kirim form untuk menghapus
-            button.closest('form').submit();
-        }
+            $('#edit_judul_konten').val('');
+            $('#edit_gambar').val('');
+            $('#previewEditImage').attr('src', '');
         });
-    });
+    
+        $(document).on('click', '.delete-btn', function () {
+            const button = $(this);
+            const id = button.data('id');
+    
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus banner ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    button.closest('form').submit();
+                }
+            });
+        });
     </script>
+    
 
 @if (session('success'))
 <script>
