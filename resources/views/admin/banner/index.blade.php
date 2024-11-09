@@ -11,6 +11,10 @@
 <!-- cards -->
     <div class="relative flex flex-col w-full min-w-0 mb-0 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border" style="margin-top: 20px">
         <div class="ml-2 mt-2 pb-0 mb-0 bg-white rounded-t-2xl">
+            <!-- Tombol Tambah Kategori Produk -->
+            {{-- <button class="inline-block px-2 py-2 my-4 text-sm font-bold text-center text-white bg-orange-500 rounded-lg" data-modal-toggle="addCategoryModal">
+                Tambahkan Data Category Produk
+            </button> --}}
             <a href="javascript:void(0)" data-toggle="modal" data-target="#addContentModal" 
                 class="inline-flex items-center px-4 py-2 my-4 text-sm font-bold text-center text-white align-middle transition-all ease-in border-0 rounded-lg shadow-soft-md bg-140 bg-x-25 leading-pro hover:shadow-soft-2xl hover:scale-102"  
                 style="background-color: #fb923c">
@@ -177,7 +181,6 @@
 
 
     </div>
-
     <!-- Bootstrap core JavaScript-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('library/jquery/jquery.min.js') }}"></script>
@@ -314,108 +317,98 @@
         });
     
         $(document).on('click', '.edit-btn', function () {
-            var id = $(this).data('id');
-            var isi = $(this).data('isi');
-            var gambar = $(this).data('gambar');
-    
-            $('#edit_judul_konten').val(isi);
-            $('#previewEditImage').attr('src', gambar);
-            $('#old_image').val(gambar.split('/').pop());
-    
-            $('#editContentForm').attr('action', `{{ route('banner.update', '') }}/${id}`);
-            $('#editContentModal').modal('show');
+        var id = $(this).data('id');
+        var isi = $(this).data('isi');
+        var gambar = $(this).data('gambar');
+
+        $('#edit_judul_konten').val(isi);
+        $('#previewEditImage').attr('src', gambar); // Tampilkan gambar lama
+        $('#old_image').val(gambar.split('/').pop()); // Ambil nama file gambar lama
+
+        // Update action URL form
+        $('#editContentForm').attr('action', `{{ route('banner.update', '') }}/${id}`);
+        $('#editContentModal').modal('show');
+
+        previewEditImage.src = gambar; // Set the source to the existing image
+        previewEditImage.style.width = '100%'; // Set the width to 100%
+        previewEditImage.style.height = '300px'; // Set a fixed height
+        previewEditImage.style.objectFit = 'contain'; // Maintain aspect ratio
+    });
+
+     document.getElementById('edit_gambar').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const preview = document.getElementById('previewEditImage');
+            preview.src = e.target.result;
+            preview.style.width = '100%';
+            preview.style.height = '300px';
+            preview.style.display = 'block';
+        }
+
+        reader.readAsDataURL(file);
+    });
+
+    // Validasi sebelum mengirim form untuk Edit
+    document.getElementById('editContentForm').addEventListener('submit', function (event) {
+    const judulKonten = document.getElementById('edit_judul_konten').value;
+    const gambar = document.getElementById('edit_gambar').files.length;
+    const oldImage = document.getElementById('old_image').value;
+
+    if (!judulKonten) {
+        event.preventDefault();
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: 'Kolom isi harus terisi!',
+            confirmButtonText: 'OK'
         });
-    
-        document.getElementById('edit_gambar').addEventListener('change', function (event) {
-            const file = event.target.files[0];
-            const maxSizeKB = 2048;
-    
-            if (file && file.size / 1024 > maxSizeKB) {
-                compressImage(file, maxSizeKB, function (compressedFile) {
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(compressedFile);
-                    document.getElementById('edit_gambar').files = dataTransfer.files;
-    
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const preview = document.getElementById('previewEditImage');
-                        preview.src = e.target.result;
-                        preview.style.width = '100%';
-                        preview.style.height = '300px';
-                        preview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(compressedFile);
-                });
-            } else {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const preview = document.getElementById('previewEditImage');
-                    preview.src = e.target.result;
-                    preview.style.width = '100%';
-                    preview.style.height = '300px';
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
+    }
+    // Jika gambar tidak diupload, pastikan oldImage terisi
+    else if (gambar === 0 && !oldImage) {
+        event.preventDefault();
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: 'Gambar lama harus ada!',
+            confirmButtonText: 'OK'
         });
-    
-        // Validasi sebelum mengirim form untuk Edit
-        document.getElementById('editContentForm').addEventListener('submit', function (event) {
-            const judulKonten = document.getElementById('edit_judul_konten').value;
-            const gambar = document.getElementById('edit_gambar').files.length;
-            const oldImage = document.getElementById('old_image').value;
-    
-            if (!judulKonten) {
-                event.preventDefault();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: 'Kolom isi harus terisi!',
-                    confirmButtonText: 'OK'
-                });
-            } else if (gambar === 0 && !oldImage) {
-                event.preventDefault();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: 'Gambar lama harus ada!',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    
+        }
+    });
         $('#editContentModal').on('hidden.bs.modal', function () {
-            $('#edit_judul_konten').val('');
-            $('#edit_gambar').val('');
-            $('#previewEditImage').attr('src', '');
+        $('#edit_judul_konten').val('');
+        $('#edit_gambar').val('');
+        $('#previewEditImage').attr('src', '');
+    });
+    $(document).on('click', '.delete-btn', function () {
+    const button = $(this);
+    const id = button.data('id');
+
+    // SweetAlert konfirmasi
+    Swal.fire({
+        title: 'Konfirmasi Hapus',
+        text: "Apakah Anda yakin ingin menghapus banner ini?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Hapus',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Kirim form untuk menghapus
+            button.closest('form').submit();
+        }
         });
-    
-        $(document).on('click', '.delete-btn', function () {
-            const button = $(this);
-            const id = button.data('id');
-    
-            Swal.fire({
-                title: 'Konfirmasi Hapus',
-                text: "Apakah Anda yakin ingin menghapus banner ini?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Hapus',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    button.closest('form').submit();
-                }
-            });
-        });
+    });
     </script>
     
 
 @if (session('success'))
 <script>
     Swal.fire({
-        position: 'center',
+        position: 'top-end',
         icon: 'success',
         title: "{{ session('success') }}",
         showConfirmButton: false,

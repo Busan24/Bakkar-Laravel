@@ -306,56 +306,120 @@
         }
 
         
-            // Fungsi untuk menampilkan pratinjau gambar dan menyesuaikan ukurannya
-            document.getElementById('gambar_produk').addEventListener('change', function(event) {
-                const file = event.target.files[0]; // Ambil file gambar yang dipilih
-                const imagePreview = document.getElementById('image-preview');  // Gambar pratinjau
+         // Fungsi untuk menampilkan pratinjau gambar baru
+    function previewImage(event) {
+        const newImagePreview = document.getElementById('new-image-preview');
+        const currentImageContainer = document.getElementById('current-image-container');
         
-                if (file) {
-                    const reader = new FileReader();
-        
-                    // Ketika file selesai dimuat (onload), update pratinjau gambar
-                    reader.onload = function(e) {
-                        imagePreview.src = e.target.result;  // Update gambar pratinjau dengan data URL (base64)
-                    };
-        
-                    // Membaca file sebagai data URL (base64) untuk pratinjau
-                    reader.readAsDataURL(file);
-                }
-            });
-        
-            // Fungsi untuk menampilkan pratinjau gambar dan menyesuaikan ukurannya
-            function previewImage(event) {
-                const newImagePreview = document.getElementById('new-image-preview');
-                const currentImageContainer = document.getElementById('current-image-container');
-                
-                // Hapus gambar lama jika ada gambar baru yang dipilih
-                if (currentImageContainer && event.target.files.length > 0) {
-                    currentImageContainer.style.display = 'none';
-                }
+        // Hapus gambar lama jika ada gambar baru yang dipilih
+        if (currentImageContainer) {
+            currentImageContainer.remove(); // Menghapus elemen gambar lama
+        }
 
-                const file = event.target.files[0];
-                const reader = new FileReader();
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
 
-                reader.onload = function () {
-                    newImagePreview.innerHTML = `
+            reader.onload = function () {
+                newImagePreview.innerHTML = `
                     <div id="current-image-container" class="image-preview-container" style="max-width: 300px; max-height: 200px; overflow: hidden;">
-                    <img src="${reader.result}" alt="Gambar Baru"  class="img-fluid mt-2" style="width: 100%; height: auto; object-fit: contain;"> 
-                    </div>`;
-                };
+                        <img src="${reader.result}" alt="Gambar Baru" class="img-fluid mt-2" style="width: 100%; height: auto; object-fit: contain;">
+                    </div>
+                `;
+            };
 
-                if (file) {
-                    reader.readAsDataURL(file);
-                }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Fungsi untuk kompres gambar
+    function compressImage(file, callback) {
+        const MAX_WIDTH = 2048;  // Batas lebar gambar
+        const MAX_HEIGHT = 2048; // Batas tinggi gambar
+
+        const img = new Image();
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            img.src = e.target.result;
+        };
+
+        img.onload = function () {
+            // Tentukan rasio pengurangan gambar
+            let width = img.width;
+            let height = img.height;
+
+            if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+                const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
+                width = width * ratio;
+                height = height * ratio;
             }
 
-            
+            // Buat canvas untuk menggambar gambar yang sudah dikompres
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = width;
+            canvas.height = height;
 
-            // Tambahkan event listener pada tombol submit
-            document.querySelector('form').addEventListener('submit', validateForm);
-            
-            // Tambahkan event listener untuk gambar baru
-            document.getElementById('gambar_produk').addEventListener('change', previewImage);
+            // Gambar gambar ke dalam canvas
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Simpan gambar hasil kompresi sebagai base64
+            canvas.toBlob(function (blob) {
+                callback(blob);
+            }, 'image/jpeg', 0.7);  // Anda bisa menyesuaikan kualitas kompresi
+        };
+
+        reader.readAsDataURL(file);  // Mulai membaca file gambar
+    }
+
+        // Fungsi untuk menangani gambar baru yang dipilih dan menampilkan gambar pratinjau
+        document.getElementById('gambar_produk').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Cek jika ada gambar baru
+                compressImage(file, function (compressedBlob) {
+                    // Tampilkan gambar pratinjau
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const newImagePreview = document.getElementById('new-image-preview');
+                        newImagePreview.innerHTML = `
+                            <div class="image-preview-container" style="max-width: 300px; max-height: 200px; overflow: hidden;">
+                                <img src="${e.target.result}" alt="Gambar Baru" class="img-fluid mt-2" style="width: 100%; height: auto; object-fit: contain;">
+                            </div>
+                        `;
+
+                        // Update input file dengan gambar yang sudah dikompres
+                        const compressedFile = new File([compressedBlob], file.name, { type: 'image/jpeg' });
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(compressedFile);  // Masukkan file yang sudah dikompres ke dalam DataTransfer
+                        document.getElementById('gambar_produk').files = dataTransfer.files;  // Update input file
+                    };
+                    reader.readAsDataURL(compressedBlob);  // Tampilkan pratinjau gambar yang dikompres
+                });
+            }
+        });
+
+        // Pastikan jika tidak ada gambar baru, gambar lama yang tetap dipakai
+        document.querySelector('form').addEventListener('submit', function (event) {
+            const gambarInput = document.getElementById('gambar_produk');
+            const oldGambar = document.querySelector('input[name="old_gambar_produk"]').value;
+
+            // Jika tidak ada gambar baru yang diupload, pastikan gambar lama tetap dipertahankan
+            if (gambarInput.files.length === 0) {
+                // Hapus gambar baru yang dipilih jika tidak ada perubahan
+                gambarInput.remove();
+            } else {
+                // Gambar baru telah dipilih dan dikompres
+                console.log('Gambar baru diunggah dan sudah diproses');
+            }
+        });
+
+        // Tambahkan event listener pada tombol submit
+        document.querySelector('form').addEventListener('submit', validateForm);
+        
+        // Tambahkan event listener untuk gambar baru
+        document.getElementById('gambar_produk').addEventListener('change', previewImage);
         </script>
         
                                 
