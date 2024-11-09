@@ -78,7 +78,7 @@
 <body class="bg-gray-100 ">
   <x-header />
   <!-- Carousel -->
-  <section class="bg-white py-20 my-6">
+  <section class="bg-white py-20 my-6 px-4">
     <div class="container mx-auto bg-gray-400 h-96 rounded-md flex items-center justify-center overflow-hidden">
       <div class="relative w-full h-full">
         <!-- Slide Container -->
@@ -118,7 +118,7 @@
         <!-- Left Column (Text + Image inside text) -->
         <div class="relative slide-in-left scroll-animation">
           <!-- Vertical Line -->
-          <div class="absolute left-0 top-0 h-full w-1 bg-orange-500 hidden md:block"></div>
+          <div class="absolute left-0 top-0 h-full w-1 bg-orange-400 hidden md:block"></div>
           
           <div class="pl-0 md:pl-8">
             <!-- AUTHENTIC SMOKY Text -->
@@ -131,14 +131,14 @@
               <!-- Gambar Ayam -->
               <img src={{asset('images/Ayam.png')}} alt="Ayam" class="h-16 w-16 object-cover fade-in">
               <!-- FRIED CHICKEN Text -->
-              <h2 class="text-3xl md:text-4xl font-bold text-orange-500 fade-in">
+              <h2 class="text-3xl md:text-4xl font-bold text-orange-400 fade-in">
                 FRIED CHICKEN
               </h2>
             </div>
 
             <!-- Button -->
             <div class="text-center md:text-left mt-6">
-              <a href="#about" class="inline-block text-black px-8 py-2.5 rounded-xl border-2 shadow-md border-orange-500 hover:bg-orange-600">
+              <a href="#about" class="inline-block text-black px-8 py-2.5 rounded-xl border-2 shadow-md border-orange-400 hover:bg-orange-600">
                 Let gets know us
               </a>
             </div>
@@ -185,7 +185,7 @@
     <div class="container mx-auto px-6 md:px-12 text-center">
       <h2 class="text-3xl font-bold text-gray-800">Contact Us</h2>
       <p class="mt-4 text-gray-600">Feel free to get in touch with us for any inquiries.</p>
-      <a href="mailto:info@brandname.com" class="mt-6 inline-block bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700">Email Us</a>
+      <a href="mailto:info@brandname.com" class="mt-6 inline-block bg-orange-400 text-white px-8 py-3 rounded-full hover:bg-orange-600">Email Us</a>
     </div>
   </section>
 
