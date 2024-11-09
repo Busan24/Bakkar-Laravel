@@ -214,9 +214,9 @@
         $('#previewEditImage').attr('src', gambar); // Tampilkan gambar lama
         $('#old_image').val(gambar.split('/').pop()); // Ambil nama file gambar lama
 
-        // Update action URL form
-        $('#editContentForm').attr('action', `{{ route('banner.update', '') }}/${id}`);
-        $('#editContentModal').modal('show');
+    // Update action URL form
+$('#editContentForm').attr('action', `{{ route('banner.update', '') }}/${id}`);
+$('#editContentModal').modal('show');
 
         previewEditImage.src = gambar; // Set the source to the existing image
         previewEditImage.style.width = '100%'; // Set the width to 100%
@@ -302,7 +302,8 @@
         showConfirmButton: false,
         timer: 1500
     });
+    
 </script>
-@endif
+@endif  
 
 @endsection

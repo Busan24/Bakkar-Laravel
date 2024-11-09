@@ -26,6 +26,11 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/login', [AuthController::class, 'postLogin']);
+
+    //
+    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/menu', [HomeController::class,'menu']);
+    Route::get('/about', [HomeController::class,'about']);
 });
 
 // Rute yang hanya bisa diakses oleh pengguna yang sudah login
