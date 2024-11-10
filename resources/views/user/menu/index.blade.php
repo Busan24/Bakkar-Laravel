@@ -23,7 +23,7 @@
 
 <!-- Menu Section -->
 <section class="py-16 mt-16">
-    <div class="container mx-auto px-6">
+    <div class="container mx-auto pl-6 pr-6">
         <h2 class="text-3xl font-bold text-center text-gray-800 fade-in-up">OUR MENU</h2>
 
         @php
