@@ -63,16 +63,6 @@
       animation: slideInRight 1.5s forwards;
     }
 
-    /* Animasi saat scroll */
-    .scroll-animation {
-      opacity: 0;
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .scroll-visible {
-      opacity: 1;
-      transform: none;
-    }
   </style>
 </head>
 <body class="bg-gray-100 ">
@@ -215,8 +205,8 @@
 
   <!-- Footer -->
   <x-footer />
-  <script src="/assets/js/cart.js"></script>
-  <script src="/assets/js/carousel.js"></script>
+  <script src="{{ asset('assets/js/cart.js') }}"></script>
+  <script src="{{ asset('assets/js/carousel.js') }}"></script>
   <x-cart />
 </body>
 </html>

@@ -9,15 +9,42 @@ function toggleCart() {
 }
 
 // Function to add items to the cart
-function addToCart(name, description, price) {
+function addToCart(name, description, price, productId) {
   const item = cart.find(item => item.name === name);
+  
   if (item) {
     item.quantity++;
   } else {
     cart.push({ name, description, price, quantity: 1 });
   }
+
   updateCart(); // Update localStorage
   displayCart();
+  
+  // Tampilkan animasi pada tombol "Pesan Pickup"
+  const button = document.getElementById(`pesan-btn-${productId}`);
+  button.classList.add('bg-green-500', 'animate-bounce');
+  button.textContent = 'Ditambahkan';
+  setTimeout(() => {
+      button.classList.remove('bg-green-500', 'animate-bounce');
+      button.textContent = 'Pesan Pickup';
+  }, 1000);
+
+  // Perbarui jumlah produk di ikon keranjang
+  updateCartCount();
+}
+
+// Function to update cart count icon
+function updateCartCount() {
+  const cartCount = document.getElementById('cart-count');
+  const count = cart.length;
+
+  if (count > 0) {
+    cartCount.textContent = count;
+    cartCount.classList.remove('hidden');
+  } else {
+    cartCount.classList.add('hidden');
+  }
 }
 
 // Function to display cart items
@@ -52,6 +79,7 @@ function removeFromCart(index) {
   cart.splice(index, 1);
   updateCart(); // Update localStorage
   displayCart();
+  updateCartCount(); // Update cart icon count
 }
 
 // Function to increase quantity of an item
@@ -66,11 +94,11 @@ function decreaseQuantity(index) {
   if (cart[index].quantity > 1) {
     cart[index].quantity -= 1;
   } else {
-    // If quantity is 1, remove the item from the cart
     cart.splice(index, 1);
   }
   updateCart(); // Update localStorage
   displayCart();
+  updateCartCount(); // Update cart icon count
 }
 
 // Function to update cart in localStorage
@@ -105,12 +133,15 @@ function checkout() {
   const encodedMessage = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/6285155238654?text=${encodedMessage}`;
   window.open(whatsappUrl, "_blank");
+
   cart = [];
   updateCart();
   displayCart();
+  updateCartCount(); // Update cart icon count
 }
 
-// Display cart when the page loads
+// Display cart and cart count when the page loads
 window.onload = function() {
   displayCart();
+  updateCartCount();
 };

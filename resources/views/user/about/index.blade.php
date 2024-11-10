@@ -11,6 +11,24 @@
     <style>
         
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOutDown {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(10px); }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .fade-out-down {
+            animation: fadeOutDown 1s ease forwards;
+        }
+
     </style>
     
 <x-header />
@@ -32,7 +50,7 @@
             <div class="container mx-auto px-4 py-24 md:py-32 relative z-10">
                 <div class="flex flex-col md:flex-row items-center justify-between">
                     <!-- Left Side: Company Info -->
-                    <div class="w-full md:w-1/2 mb-12 md:mb-0">
+                    <div class="w-full md:w-1/2 mb-12 md:mb-0 observer-item">
                         <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
                             BAKKAR<br>FRIED<br>CHICKEN
                         </h1>
@@ -43,7 +61,7 @@
                     </div>
                     
                     <!-- Right Side: Features -->
-                    <div class="w-full md:w-1/2 md:pl-12">
+                    <div class="w-full md:w-1/2 md:pl-12 observer-item">
                         <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl p-8 shadow-2xl">
                             <h2 class="text-2xl font-semibold mb-6">kenapa harus ayam kami?</h2>
                             <ul class="space-y-4">
@@ -76,12 +94,12 @@
         <section class="container mx-auto px-4 py-12 md:py-24">
             <div class="flex flex-col md:flex-row items-center justify-between">
                 <!-- Gambar tampil besar pada layar kecil -->
-                <div class="w-full md:w-1/2 mb-8 md:mb-0">
+                <div class="w-full md:w-1/2 mb-8 md:mb-0 observer-item">
                     <div class="bg-white rounded-lg shadow-lg p-8">
                         <img src="{{ asset('images/sertifikat-halal.png') }}" alt="sertifikat halal" class="w-full md:w-auto">
                     </div>
-                </div>
-                <div class="w-1/2 mb-8 px-8 md:block hidden">
+                </div>                
+                <div class="w-full md:w-1/2 mb-8 px-8 observer-item">
                     <h1 class="text-3xl font-bold text-gray-800 mb-4">Bersertifikat Halal</h1>
                     <p class="text-xl text-gray-600 mb-6">
                         Kami bekerja sama hanya dengan pemasok ayam yang telah bersertifikasi halal dan memiliki sistem bisnis terintegrasi,
@@ -103,7 +121,7 @@
     <div class="absolute inset-0 bg-black opacity-40 overflow-hidden"></div>
     <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('images/about-ayam.jpg') }}'); opacity: 0.5;"></div>
 
-    <div class="container mx-auto px-4 py-24 md:py-32 relative z-10">
+    <div class="container mx-auto px-4 py-24 md:py-32 relative z-10 observer-item">
         @foreach($kontens as $index => $konten)
             <div class="flex {{ $index % 2 == 0 ? 'justify-start' : 'justify-end' }} mb-5">
                 <div class="w-full md:w-1/2 bg-gradient-to-br from-black to-gray-800 shadow-lg rounded-lg overflow-hidden">
@@ -127,7 +145,33 @@
 
 
     </main>
-    <script src="/assets/js/cart.js"></script>
+    <script src="{{ asset('assets/js/cart.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // Membuat observer untuk mendeteksi elemen yang masuk atau keluar viewport
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Tambahkan kelas fade-in-up saat elemen muncul
+                    entry.target.classList.add('fade-in-up');
+                    entry.target.classList.remove('fade-out-down');
+                } else {
+                    // Tambahkan kelas fade-out-down saat elemen keluar dari viewport
+                    entry.target.classList.remove('fade-in-up');
+                    entry.target.classList.add('fade-out-down');
+                }
+            });
+        }, {
+            threshold: 0.1 // Menentukan seberapa banyak elemen yang harus terlihat
+        });
+
+        // Observe setiap elemen yang ingin dianimasikan
+        document.querySelectorAll('.observer-item').forEach(item => {
+            observer.observe(item);
+        });
+    });
+
+    </script>
     <!-- ... (previous script remains unchanged) ... -->
 </body>
 </html>

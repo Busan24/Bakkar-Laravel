@@ -14,6 +14,7 @@
         <!-- Cart Icon -->
         <button onclick="toggleCart()" class="relative text-gray-600 hover:text-gray-900">
             <i class="fas fa-basket-shopping fa-xl"></i>
+            <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 hidden">0</span>
         </button>
     </div>
 </nav>
