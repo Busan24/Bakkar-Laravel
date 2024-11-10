@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beranda</title>
   <!-- Swiper.js CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-  <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-bakkar.png') }}" />
+  <link rel="icon" type="image/png" href="{{ asset('assets/img/logo_bakkar.png') }}" />
 <!-- Swiper.js JavaScript -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 

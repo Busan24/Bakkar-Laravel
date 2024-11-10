@@ -1,3 +1,5 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div id="cartModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden" style="z-index: 9999;">
     <div class="bg-white rounded-lg shadow-lg max-w-lg w-full relative">
         <div class="p-6">

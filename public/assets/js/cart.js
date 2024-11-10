@@ -117,11 +117,21 @@ function getGreeting() {
 
 // Function to checkout and generate WhatsApp message
 function checkout() {
+  const cartModal = document.getElementById("cartModal");
+  
   if (cart.length === 0) {
-    alert("Your cart is empty!");
+    // Sembunyikan cart modal sebelum menampilkan SweetAlert
+    cartModal.classList.add("hidden");
+    
+    // Tampilkan SweetAlert jika keranjang kosong
+    Swal.fire({
+      icon: 'warning',
+      title: 'Keranjang Anda kosong',
+      text: 'Silakan tambahkan produk sebelum checkout.',
+      confirmButtonText: 'OK'
+    });
     return;
   }
-
   const greeting = getGreeting();
   let message = `Selamat ${greeting} Admin Bakkar,\n`;
   message += "Saya ingin memesan menu bakkar berikut:\n";

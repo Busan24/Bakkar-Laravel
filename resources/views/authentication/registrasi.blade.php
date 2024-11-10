@@ -4,7 +4,7 @@
     <meta http-equiv="Expires" content="0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-bakkar.png') }}" />
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo_bakkar.png') }}" />
     <title>Registrasi</title>
 </head>
 

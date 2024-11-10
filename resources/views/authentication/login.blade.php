@@ -1,8 +1,8 @@
 @include('layout.auth.link') 
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="icon" type="image/png" href="{{ asset('assets/img/logo-bakkar.png') }}" />
+<link rel="icon" type="image/png" href="{{ asset('assets/img/logo_bakkar.png') }}" />
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<link rel="icon" type="image/png" href="{{ asset('assets/img/logo-bakkar.png') }}" />
+
 <div class="font-sans text-gray-900 antialiased">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
       <div class="flex justify-center">
