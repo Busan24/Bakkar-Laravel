@@ -4,6 +4,7 @@
     <meta http-equiv="Expires" content="0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-bakkar.png') }}" />
     <title>Registrasi</title>
 </head>
 
@@ -15,7 +16,9 @@
 <div class="font-sans text-gray-900 antialiased">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
       <div class="flex justify-center">
-        <img src="{{ asset('assets/img/logo-bakkar.png') }}" class="inline h-16 w-auto max-w-full transition-all duration-200 ease-nav-brand" alt="main_logo" />
+        <a href="{{ route('home') }}"> <!-- Tambahkan ini -->
+            <img src="{{ asset('assets/img/logo-bakkar.png') }}" class="inline h-16 w-auto max-w-full transition-all duration-200 ease-nav-brand" alt="main_logo" />
+        </a> <!-- Dan tutup tag di sini -->
     </div>
   
       <div class="w-full sm:max-w-md mt-6 px-8 py-6 bg-white shadow-md overflow-hidden sm:rounded-lg">

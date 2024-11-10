@@ -6,6 +6,7 @@
   <title>Beranda</title>
   <!-- Swiper.js CSS -->
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-bakkar.png') }}" />
 <!-- Swiper.js JavaScript -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 

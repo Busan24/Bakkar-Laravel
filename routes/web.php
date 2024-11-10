@@ -24,11 +24,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'registrasi'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    // Rute untuk mengarahkan /admin ke halaman login
+    Route::get('/admin', function () {
+        return redirect()->route('login');
+    });
     Route::get('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/login', [AuthController::class, 'postLogin']);
 
-    //
-    Route::get('/',[HomeController::class, 'index']);
+    
+    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/about',[HomeController::class, 'about']);
     Route::get('/menu',[HomeController::class, 'menu']);
 });
