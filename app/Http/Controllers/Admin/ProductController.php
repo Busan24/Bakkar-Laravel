@@ -47,7 +47,6 @@ public function store(Request $request)
         'kategori_produk' => 'required|exists:categories,id',
         'deskripsi-produk' => 'required|string',
         'harga-produk' => 'required|numeric|min:0',
-        'Whatsapp-produk' => 'required|string',
         'gambar_produk' => 'required|image|mimes:jpeg,png,jpg,gif',
     ]);
 
@@ -66,7 +65,6 @@ public function store(Request $request)
     $product->category_id = $request->input('kategori_produk');
     $product->description = $request->input('deskripsi-produk');
     $product->price = $request->input('harga-produk');
-    $product->whatsapp = $request->input('Whatsapp-produk');
 
     // Menangani file gambar produk
     if ($request->hasFile('gambar_produk')) {
@@ -102,7 +100,6 @@ public function update(Request $request, $id)
         'kategori_produk' => 'required|exists:categories,id',
         'deskripsi-produk' => 'required|string',
         'harga-produk' => 'required|numeric|min:0',
-        'Whatsapp-produk' => 'required|string',
         'gambar_produk' => 'nullable|image|mimes:jpeg,png,jpg,gif',  // Gambar tidak wajib diunggah jika tidak ada
     ]);
 
@@ -114,7 +111,6 @@ public function update(Request $request, $id)
     $product->category_id = $request->input('kategori_produk');
     $product->description = $request->input('deskripsi-produk');
     $product->price = $request->input('harga-produk');
-    $product->whatsapp = $request->input('Whatsapp-produk');
 
     // Periksa apakah ada gambar baru yang diunggah
     if ($request->hasFile('gambar_produk')) {

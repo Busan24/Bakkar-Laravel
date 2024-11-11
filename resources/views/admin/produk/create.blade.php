@@ -142,11 +142,6 @@
                                                         <label for="harga">Harga</label>
                                                         <input type="number" class="form-control" name="harga-produk" id="harga" placeholder="Masukkan Harga Produk" required>
                                                     </div>
-                                        
-                                                    <div class="form-group">
-                                                        <label for="whatsapp">Whatsapp</label>
-                                                        <textarea class="form-control" id="whatsapp" name="Whatsapp-produk" rows="3" placeholder="Masukkan No Whatsapp" required></textarea>
-                                                    </div>
                                                 </div>
                                     
                                                 <div class="col-md-6">
@@ -219,7 +214,6 @@
                 const kategoriProduk = document.querySelector('select[name="kategori_produk"]').value;
                 const deskripsiProduk = document.getElementById('deskripsi').value.trim();
                 const hargaProduk = document.getElementById('harga').value.trim();
-                const whatsappProduk = document.getElementById('whatsapp').value.trim();
                 const gambarProduk = document.getElementById('gambar_produk').files.length;
         
                 // Array untuk menyimpan pesan error
@@ -229,7 +223,7 @@
                 if (!namaProduk) {
                     errorMessages.push("Nama produk harus diisi.");
                 }
-                
+        
                 if (!kategoriProduk) {
                     errorMessages.push("Kategori produk harus dipilih.");
                 }
@@ -249,10 +243,6 @@
                         confirmButtonText: 'OK'
                     });
                     return false;
-                }
-        
-                if (!whatsappProduk) {
-                    errorMessages.push("Nomor WhatsApp harus diisi.");
                 }
         
                 if (gambarProduk === 0) {
@@ -317,10 +307,10 @@
                         canvas.width = img.width;
                         canvas.height = img.height;
                         ctx.drawImage(img, 0, 0, img.width, img.height);
-                        
+        
                         let quality = 0.9; // Mulai dari kualitas tinggi
                         let compressedFile = null;
-                        
+        
                         // Coba kompresi dengan kualitas yang menurun sampai mencapai ukuran yang diinginkan
                         function tryCompress() {
                             canvas.toBlob(function(blob) {
@@ -333,11 +323,34 @@
                                 }
                             }, file.type, quality);
                         }
-                        
+        
                         tryCompress();
                     };
                 };
             }
+        
+            // Fungsi untuk validasi harga agar hanya menerima angka
+            document.getElementById('harga').addEventListener('input', function(event) {
+                const hargaInput = event.target;
+                const value = hargaInput.value;
+        
+                // Hapus karakter yang bukan angka atau koma
+                const validValue = value.replace(/[^0-9]/g, '');
+        
+                if (value !== validValue) {
+                    // Jika ada karakter selain angka, peringatkan pengguna
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Harga Tidak Valid',
+                        text: 'Harga hanya boleh berupa angka.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                }
+        
+                // Perbarui nilai input untuk hanya mengandung angka
+                hargaInput.value = validValue;
+            });
         
             // Tambahkan debounce pada submit form
             function debounce(func, delay) {
@@ -361,6 +374,7 @@
                 submitButton.innerHTML = 'Saving...';
             });
         </script>
+        
         
 
 @if (session('error'))

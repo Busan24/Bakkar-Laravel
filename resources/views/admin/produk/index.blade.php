@@ -84,9 +84,6 @@
                                 @endif
                             </p>
         
-                            <!-- WhatsApp Produk -->
-                            <p class="text-gray-600 mt-2">{{ $product->whatsapp }}</p>
-        
                             <!-- Harga Produk -->
                             <h2 class="text-black-600 mt-2 text-xl font-semibold">Rp {{ number_format($product->price, 0, ',', '.') }}</h2>
                         </div>

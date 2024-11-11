@@ -140,12 +140,7 @@
                                         
                                                     <div class="form-group">
                                                         <label for="harga_produk">Harga</label>
-                                                        <input type="number" class="form-control" name="harga-produk" id="harga" value="{{ $product->price }}" required>
-                                                    </div>
-                                        
-                                                    <div class="form-group">
-                                                        <label for="Whatsapp">Whatsapp</label>
-                                                        <textarea class="form-control" id="whatsapp" name="Whatsapp-produk" rows="3" required>{{ $product->whatsapp }}</textarea>
+                                                        <input type="number" class="form-control" name="harga-produk" id="harga" value="{{ number_format($product->price, 0, '', '') }}" required>
                                                     </div>
                                                 </div>
                                         
@@ -239,187 +234,208 @@
         <script src="//cdn.ckeditor.com/4.22.1/basic/ckeditor.js"></script>
                 
         <script>
+            // Fungsi untuk memvalidasi input harga produk
+            function validatePriceInput() {
+                const hargaInput = document.getElementById('harga');
+                let hargaValue = hargaInput.value.trim();
+        
+                // Hapus semua karakter selain angka dan titik
+                const validHargaValue = hargaValue.replace(/[^0-9.]/g, '');
+        
+                // Periksa apakah ada lebih dari satu titik
+                if ((validHargaValue.match(/\./g) || []).length > 1) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Harga Tidak Valid',
+                        text: 'Harga produk tidak boleh memiliki titik',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    hargaInput.value = ''; // Clear the input value
+                    return false;
+                }
+        
+                // Periksa apakah harga yang dimasukkan hanya angka atau angka dengan satu titik desimal
+                if (isNaN(validHargaValue) || validHargaValue === '') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Harga Tidak Valid',
+                        text: 'Harga produk harus berupa angka yang valid.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    hargaInput.value = ''; // Clear the input value
+                    return false;
+                }
+        
+                // Jika harga valid, set input dengan nilai yang benar
+                hargaInput.value = validHargaValue;
+                return true;
+            }
+        
+            // Menambahkan event listener untuk memvalidasi input harga sebelum submit
+            document.getElementById('harga').addEventListener('input', validatePriceInput);
+        
             // Fungsi validasi form sebelum submit
             function validateForm(event) {
-            event.preventDefault(); // Mencegah submit form langsung
-
-            // Ambil nilai setiap field
-            const namaProduk = document.getElementById('name').value.trim();
-            const kategoriProduk = document.querySelector('select[name="kategori_produk"]').value;
-            const deskripsiProduk = document.getElementById('deskripsi').value.trim();
-            const hargaProduk = document.getElementById('harga').value.trim();
-            const whatsappProduk = document.getElementById('whatsapp').value.trim();
-            const gambarProduk = document.getElementById('gambar_produk').files.length;
-            const oldGambarProduk = document.querySelector('input[name="old_gambar_produk"]').value;
-
-            // Array untuk menyimpan pesan error
-            let errorMessages = [];
-
-            // Validasi setiap field dan tambahkan pesan error jika field kosong
-            if (!namaProduk) {
-                errorMessages.push("Nama produk harus diisi.");
-            }
-
-            if (!kategoriProduk) {
-                errorMessages.push("Kategori produk harus dipilih.");
-            }
-
-            if (!deskripsiProduk) {
-                errorMessages.push("Deskripsi produk harus diisi.");
-            }
-
-            // Validasi harga produk, pastikan hanya berupa angka positif
-            if (!hargaProduk) {
-                errorMessages.push("Harga produk harus diisi.");
-            } else if (isNaN(hargaProduk) || parseFloat(hargaProduk) <= 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Harga Tidak Valid',
-                    text: 'Harga produk harus berupa angka positif lebih dari 0.',
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'OK'
-                });
-                return false;
-            }
-
-            if (!whatsappProduk) {
-                errorMessages.push("Nomor WhatsApp harus diisi.");
-            }
-
-            // Gambar tidak wajib diunggah jika gambar lama masih ada
-            if (gambarProduk === 0 && !oldGambarProduk) {
-                errorMessages.push("Gambar produk harus diunggah.");
-            }
-
-            // Jika ada error, tampilkan SweetAlert2 dan hentikan proses submit
-            if (errorMessages.length > 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: errorMessages.join("\n"),
-                });
-                return false;
-            }
-
-            // Jika validasi lolos, submit form
-            event.target.submit();
-        }
-
+                event.preventDefault(); // Mencegah submit form langsung
         
-         // Fungsi untuk menampilkan pratinjau gambar baru
-    function previewImage(event) {
-        const newImagePreview = document.getElementById('new-image-preview');
-        const currentImageContainer = document.getElementById('current-image-container');
+                // Ambil nilai setiap field
+                const namaProduk = document.getElementById('name').value.trim();
+                const kategoriProduk = document.querySelector('select[name="kategori_produk"]').value;
+                const deskripsiProduk = document.getElementById('deskripsi').value.trim();
+                const hargaProduk = document.getElementById('harga').value.trim();
+                const gambarProduk = document.getElementById('gambar_produk').files.length;
+                const oldGambarProduk = document.querySelector('input[name="old_gambar_produk"]').value;
         
-        // Hapus gambar lama jika ada gambar baru yang dipilih
-        if (currentImageContainer) {
-            currentImageContainer.remove(); // Menghapus elemen gambar lama
-        }
-
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = function () {
-                newImagePreview.innerHTML = `
-                    <div id="current-image-container" class="image-preview-container" style="max-width: 300px; max-height: 200px; overflow: hidden;">
-                        <img src="${reader.result}" alt="Gambar Baru" class="img-fluid mt-2" style="width: 100%; height: auto; object-fit: contain;">
-                    </div>
-                `;
-            };
-
-            reader.readAsDataURL(file);
-        }
-    }
-
-    // Fungsi untuk kompres gambar
-    function compressImage(file, callback) {
-        const MAX_WIDTH = 2048;  // Batas lebar gambar
-        const MAX_HEIGHT = 2048; // Batas tinggi gambar
-
-        const img = new Image();
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-            img.src = e.target.result;
-        };
-
-        img.onload = function () {
-            // Tentukan rasio pengurangan gambar
-            let width = img.width;
-            let height = img.height;
-
-            if (width > MAX_WIDTH || height > MAX_HEIGHT) {
-                const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
-                width = width * ratio;
-                height = height * ratio;
+                // Array untuk menyimpan pesan error
+                let errorMessages = [];
+        
+                // Validasi setiap field dan tambahkan pesan error jika field kosong
+                if (!namaProduk) {
+                    errorMessages.push("Nama produk harus diisi.");
+                }
+        
+                if (!kategoriProduk) {
+                    errorMessages.push("Kategori produk harus dipilih.");
+                }
+        
+                if (!deskripsiProduk) {
+                    errorMessages.push("Deskripsi produk harus diisi.");
+                }
+        
+                // Validasi harga produk, pastikan hanya berupa angka positif
+                if (!hargaProduk) {
+                    errorMessages.push("Harga produk harus diisi.");
+                } else if (isNaN(hargaProduk) || parseFloat(hargaProduk) <= 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Harga Tidak Valid',
+                        text: 'Harga produk harus berupa angka positif lebih dari 0.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                    return false;
+                }
+        
+                // Gambar tidak wajib diunggah jika gambar lama masih ada
+                if (gambarProduk === 0 && !oldGambarProduk) {
+                    errorMessages.push("Gambar produk harus diunggah.");
+                }
+        
+                // Jika ada error, tampilkan SweetAlert2 dan hentikan proses submit
+                if (errorMessages.length > 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: errorMessages.join("\n"),
+                    });
+                    return false;
+                }
+        
+                // Jika validasi lolos, submit form
+                event.target.submit();
             }
-
-            // Buat canvas untuk menggambar gambar yang sudah dikompres
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = width;
-            canvas.height = height;
-
-            // Gambar gambar ke dalam canvas
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Simpan gambar hasil kompresi sebagai base64
-            canvas.toBlob(function (blob) {
-                callback(blob);
-            }, 'image/jpeg', 0.7);  // Anda bisa menyesuaikan kualitas kompresi
-        };
-
-        reader.readAsDataURL(file);  // Mulai membaca file gambar
-    }
-
-        // Fungsi untuk menangani gambar baru yang dipilih dan menampilkan gambar pratinjau
-        document.getElementById('gambar_produk').addEventListener('change', function (event) {
-            const file = event.target.files[0];
-            if (file) {
-                // Cek jika ada gambar baru
-                compressImage(file, function (compressedBlob) {
-                    // Tampilkan gambar pratinjau
+        
+            // Fungsi untuk menampilkan pratinjau gambar baru
+            function previewImage(event) {
+                const newImagePreview = document.getElementById('new-image-preview');
+                const currentImageContainer = document.getElementById('current-image-container');
+        
+                // Hapus gambar lama jika ada gambar baru yang dipilih
+                if (currentImageContainer) {
+                    currentImageContainer.remove(); // Menghapus elemen gambar lama
+                }
+        
+                const file = event.target.files[0];
+                if (file) {
                     const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const newImagePreview = document.getElementById('new-image-preview');
+        
+                    reader.onload = function () {
                         newImagePreview.innerHTML = `
-                            <div class="image-preview-container" style="max-width: 300px; max-height: 200px; overflow: hidden;">
-                                <img src="${e.target.result}" alt="Gambar Baru" class="img-fluid mt-2" style="width: 100%; height: auto; object-fit: contain;">
+                            <div id="current-image-container" class="image-preview-container" style="max-width: 300px; max-height: 200px; overflow: hidden;">
+                                <img src="${reader.result}" alt="Gambar Baru" class="img-fluid mt-2" style="width: 100%; height: auto; object-fit: contain;">
                             </div>
                         `;
-
-                        // Update input file dengan gambar yang sudah dikompres
-                        const compressedFile = new File([compressedBlob], file.name, { type: 'image/jpeg' });
-                        const dataTransfer = new DataTransfer();
-                        dataTransfer.items.add(compressedFile);  // Masukkan file yang sudah dikompres ke dalam DataTransfer
-                        document.getElementById('gambar_produk').files = dataTransfer.files;  // Update input file
                     };
-                    reader.readAsDataURL(compressedBlob);  // Tampilkan pratinjau gambar yang dikompres
-                });
-            }
-        });
-
-        // Pastikan jika tidak ada gambar baru, gambar lama yang tetap dipakai
-        document.querySelector('form').addEventListener('submit', function (event) {
-            const gambarInput = document.getElementById('gambar_produk');
-            const oldGambar = document.querySelector('input[name="old_gambar_produk"]').value;
-
-            // Jika tidak ada gambar baru yang diupload, pastikan gambar lama tetap dipertahankan
-            if (gambarInput.files.length === 0) {
-                // Hapus gambar baru yang dipilih jika tidak ada perubahan
-                gambarInput.remove();
-            } else {
-                // Gambar baru telah dipilih dan dikompres
-                console.log('Gambar baru diunggah dan sudah diproses');
-            }
-        });
-
-        // Tambahkan event listener pada tombol submit
-        document.querySelector('form').addEventListener('submit', validateForm);
         
-        // Tambahkan event listener untuk gambar baru
-        document.getElementById('gambar_produk').addEventListener('change', previewImage);
+                    reader.readAsDataURL(file);
+                }
+            }
+        
+            // Fungsi untuk kompres gambar
+            function compressImage(file, callback) {
+                const MAX_WIDTH = 2048;  // Batas lebar gambar
+                const MAX_HEIGHT = 2048; // Batas tinggi gambar
+        
+                const img = new Image();
+                const reader = new FileReader();
+        
+                reader.onload = function (e) {
+                    img.src = e.target.result;
+                };
+        
+                img.onload = function () {
+                    // Tentukan rasio pengurangan gambar
+                    let width = img.width;
+                    let height = img.height;
+        
+                    if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+                        const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
+                        width = width * ratio;
+                        height = height * ratio;
+                    }
+        
+                    // Buat canvas untuk menggambar gambar yang sudah dikompres
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = width;
+                    canvas.height = height;
+        
+                    // Gambar gambar ke dalam canvas
+                    ctx.drawImage(img, 0, 0, width, height);
+        
+                    // Simpan gambar hasil kompresi sebagai base64
+                    canvas.toBlob(function (blob) {
+                        callback(blob);
+                    }, 'image/jpeg', 0.7);  // Anda bisa menyesuaikan kualitas kompresi
+                };
+        
+                reader.readAsDataURL(file);  // Mulai membaca file gambar
+            }
+        
+            // Fungsi untuk menangani gambar baru yang dipilih dan menampilkan gambar pratinjau
+            document.getElementById('gambar_produk').addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    // Cek jika ada gambar baru
+                    compressImage(file, function (compressedBlob) {
+                        // Tampilkan gambar pratinjau
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const newImagePreview = document.getElementById('new-image-preview');
+                            newImagePreview.innerHTML = `
+                                <div class="image-preview-container" style="max-width: 300px; max-height: 200px; overflow: hidden;">
+                                    <img src="${e.target.result}" alt="Gambar Baru" class="img-fluid mt-2" style="width: 100%; height: auto; object-fit: contain;">
+                                </div>
+                            `;
+        
+                            // Update input file dengan gambar yang sudah dikompres
+                            const compressedFile = new File([compressedBlob], file.name, { type: 'image/jpeg' });
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(compressedFile);  // Masukkan file yang sudah dikompres ke dalam DataTransfer
+                            document.getElementById('gambar_produk').files = dataTransfer.files;  // Update input file
+                        };
+                        reader.readAsDataURL(compressedBlob);  // Tampilkan pratinjau gambar yang dikompres
+                    });
+                }
+            });
+        
+            // Tambahkan event listener pada tombol submit
+            document.querySelector('form').addEventListener('submit', validateForm);
+            
+            // Tambahkan event listener untuk gambar baru
+            document.getElementById('gambar_produk').addEventListener('change', previewImage);
         </script>
         
                                 
