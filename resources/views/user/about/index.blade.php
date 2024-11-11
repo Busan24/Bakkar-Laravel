@@ -138,12 +138,14 @@
                             <!-- Thumbnail YouTube -->
                             @if ($videoId)
                             <a href="{{ $videoUrl }}" target="_blank" class="relative block">
-                                <img src="{{ $thumbnailUrl }}" alt="Thumbnail YouTube" class="w-full rounded-lg shadow-lg hover:opacity-80 transition-opacity duration-300">
+                                <!-- Mengatur ukuran thumbnail YouTube -->
+                                <img src="{{ $thumbnailUrl }}" alt="Thumbnail YouTube" class="w-full h-64 object-cover rounded-lg shadow-lg hover:opacity-80 transition-opacity duration-300">
                                 
                                 <!-- Ikon YouTube di tengah thumbnail -->
                                 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
                                     <a href="{{ $videoUrl }}" target="_blank">
-                                        <i class="fab fa-youtube text-red-600 text-8xl"></i>
+                                        <!-- Mengatur ukuran ikon YouTube -->
+                                        <i class="fab fa-youtube text-red-600 text-6xl"></i>
                                     </a>
                                 </div>
                             </a>
@@ -155,6 +157,7 @@
                 @endforeach
             </div>
         </section>
+        
         
     </main>
     <script src="{{ asset('assets/js/cart.js') }}"></script>
