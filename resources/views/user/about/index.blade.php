@@ -117,32 +117,45 @@
         </section>
 
         <section class="relative bg-gradient-to-br from-black to-gray-800 text-white overflow-hidden">
-    <div class="absolute inset-0 bg-black opacity-40 overflow-hidden"></div>
-    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('images/about-ayam.jpg') }}'); opacity: 0.5;"></div>
-
-    <div class="container mx-auto px-4 py-24 md:py-32 relative z-10 observer-item">
-        @foreach($kontens as $index => $konten)
-            <div class="flex {{ $index % 2 == 0 ? 'justify-start' : 'justify-end' }} mb-5">
-                <div class="w-full md:w-1/2 bg-gradient-to-br from-black to-gray-800 shadow-lg rounded-lg overflow-hidden">
-                    <div class="p-5">
-                        <h2 class="text-2xl font-semibold mb-4">{{ $konten->judul_konten }}</h2>
-                        <div class="aspect-w-16 aspect-h-9">
-                            <iframe 
-                                src="{{$konten->isi_konten}}<" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen
-                                class="w-full h-full">
-                            </iframe>
+            <div class="absolute inset-0 bg-black opacity-40 overflow-hidden"></div>
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('images/about-ayam.jpg') }}'); opacity: 0.5;"></div>
+        
+            <div class="container mx-auto px-4 py-24 md:py-32 relative z-10 observer-item">
+                @foreach($kontens as $index => $konten)
+                <div class="flex {{ $index % 2 == 0 ? 'justify-start' : 'justify-end' }} mb-5">
+                    <div class="w-full md:w-1/2 bg-gradient-to-br from-black to-gray-800 shadow-lg rounded-lg overflow-hidden">
+                        <div class="p-5 relative">
+                            <h2 class="text-2xl font-semibold mb-4">{{ $konten->judul_konten }}</h2>
+        
+                            <!-- Ekstrak ID Video dari URL YouTube -->
+                            @php
+                            preg_match('/(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+|(?:v|e(?:mbed)?)\/([^\&\?\/\n\s]+))|youtu\.be\/([^\&\?\/\n\s]+))/', $konten->isi_konten, $matches);
+                            $videoId = $matches[2] ?? $matches[1] ?? null;
+                            $thumbnailUrl = $videoId ? "https://img.youtube.com/vi/$videoId/maxresdefault.jpg" : '';
+                            $videoUrl = $videoId ? "https://www.youtube.com/watch?v=$videoId" : '';
+                            @endphp
+        
+                            <!-- Thumbnail YouTube -->
+                            @if ($videoId)
+                            <a href="{{ $videoUrl }}" target="_blank" class="relative block">
+                                <img src="{{ $thumbnailUrl }}" alt="Thumbnail YouTube" class="w-full rounded-lg shadow-lg hover:opacity-80 transition-opacity duration-300">
+                                
+                                <!-- Ikon YouTube di tengah thumbnail -->
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                                    <a href="{{ $videoUrl }}" target="_blank">
+                                        <i class="fab fa-youtube text-red-600 text-8xl"></i>
+                                    </a>
+                                </div>
+                            </a>
+                            @endif
+        
                         </div>
                     </div>
                 </div>
+                @endforeach
             </div>
-        @endforeach
-    </div>
-</section>
-
-
+        </section>
+        
     </main>
     <script src="{{ asset('assets/js/cart.js') }}"></script>
     <script>
