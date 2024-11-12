@@ -32,10 +32,15 @@
         @endphp
 
         @foreach ($categories as $category)
-            <div class="relative mt-8 fade-in-up observer-item" style="animation-delay: 0.2s;">
-                <div class="absolute left-0 top-0 bg-yellow-400 h-full w-screen max-w-lg"></div>
-                <div class="relative z-10 px-6 py-2 font-semibold text-lg text-white">{{ strtoupper($category) }}</div>
-            </div>
+        @php
+            $categoryColor = \App\Models\Category::where('name', $category)->value('color');
+        @endphp
+        <div class="relative mt-8 fade-in-up observer-item" style="animation-delay: 0.2s;">
+            <!-- Gunakan warna sesuai dengan kategori -->
+            <div class="absolute left-0 top-0 h-full w-screen max-w-lg" style="background-color: {{ $categoryColor }};"></div>
+            <div class="relative z-10 px-6 py-2 font-semibold text-lg text-white">{{ strtoupper($category) }}</div>
+        </div>
+
 
             <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 @foreach($products->where('category.name', $category) as $product)

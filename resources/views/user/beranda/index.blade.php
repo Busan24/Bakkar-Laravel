@@ -148,7 +148,7 @@
 
             <!-- Button -->
             <div class="text-center md:text-left mt-6">
-              <a href="#about" class="inline-block px-8 py-2.5 rounded-xl border-2 shadow-md bg-orange-400 border-orange-400 hover:bg-orange-600">
+              <a href="{{ url('/about') }}" class="inline-block px-8 py-2.5 rounded-xl border-2 shadow-md bg-orange-400 border-orange-400 hover:bg-orange-600">
                 Let gets know us
               </a>
             </div>
