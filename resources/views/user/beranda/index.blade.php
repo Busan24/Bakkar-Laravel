@@ -74,6 +74,23 @@
             animation: fadeInUp 1.5s ease forwards;
         }
 
+    a.group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+    a.group > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: 100%;
+        width: 100%;
+    }
+
+
   </style>
 </head>
 <body class="bg-gray-100 ">
@@ -204,7 +221,8 @@
            
             @foreach($kontens as $konten)
                 <!-- Konten Card -->
-                <a href="{{ $konten->isi_konten }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl observer-item fade-in-up flex items-center justify-center p-6">
+                <a href="{{ $konten->isi_konten }}" 
+                   class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl observer-item fade-in-up flex items-center justify-center p-6 h-full">
                     <div class="flex flex-col items-center justify-center w-full h-full text-center">
                         <h3 class="text-lg font-semibold text-gray-800">{{ $konten->judul_konten }}</h3>
                     </div>
@@ -214,7 +232,6 @@
         </div>
     </div>
     
-
 </section>
 
   <!-- Footer -->
