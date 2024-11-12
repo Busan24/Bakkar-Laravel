@@ -175,7 +175,7 @@
            
             @foreach($products as $product)
                 <!-- Product Card 1 -->
-                <a href="{ url('/menu') }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl">
+                <a href="{{ url('/menu') }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl">
                      <!-- Product 1 -->
                 <div class="bg-white rounded-lg flex items-center observer-item fade-in-up">
                 <img src="{{ asset('storage/' . $product->photo) }}" alt="{{ $product->name }}" class="w-32 h-32 object-contain me-2 ms-1">
