@@ -197,22 +197,23 @@
     <section id="konten" class="py-12 pb-32 bg-white">
 
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold text-gray-800 text-center mb-12 observer-item fade-in-up">
-          Tersedia juga di
-      </h2>
-      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
-        
-          @foreach($kontens as $konten)
-              <!-- Konten Card -->
-              <a href="{{ $konten->isi_konten }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl observer-item fade-in-up flex flex-col items-center p-6">
-                  <div class="flex flex-col items-center justify-center w-full h-full">
-                      <h3 class="text-lg font-semibold text-gray-800 text-center">{{ $konten->judul_konten }}</h3>
-                  </div>
-              </a>
-          @endforeach
-
-      </div>
-  </div>
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-12 observer-item fade-in-up">
+            Tersedia juga di
+        </h2>
+        <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+           
+            @foreach($kontens as $konten)
+                <!-- Konten Card -->
+                <a href="{{ $konten->isi_konten }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl observer-item fade-in-up flex items-center justify-center p-6">
+                    <div class="flex flex-col items-center justify-center w-full h-full text-center">
+                        <h3 class="text-lg font-semibold text-gray-800">{{ $konten->judul_konten }}</h3>
+                    </div>
+                </a>
+            @endforeach
+    
+        </div>
+    </div>
+    
 
 </section>
 
