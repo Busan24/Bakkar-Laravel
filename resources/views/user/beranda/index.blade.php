@@ -65,6 +65,15 @@
       animation: slideInRight 1.5s forwards;
     }
 
+    /* Custom animations */
+    @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up {
+            animation: fadeInUp 1.5s ease forwards;
+        }
+
   </style>
 </head>
 <body class="bg-gray-100 ">
@@ -161,14 +170,14 @@
     <!-- Section for Product Cards -->
     <section id="products" class="py-32 bg-white">
         <div class="container mx-auto px-6 md:px-12">
-            <h2 class="text-3xl font-bold text-gray-800 text-center">Authentic Flavor</h2>
+            <h2 class="text-3xl font-bold text-gray-800 text-center observer-item fade-in-up">Authentic Flavor</h2>
             <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
            
             @foreach($products as $product)
                 <!-- Product Card 1 -->
                 <a href="/products/1" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl">
                      <!-- Product 1 -->
-                <div class="bg-white rounded-lg flex items-center">
+                <div class="bg-white rounded-lg flex items-center observer-item fade-in-up">
                 <img src="{{ asset('storage/' . $product->photo) }}" alt="{{ $product->name }}" class="w-32 h-32 object-contain me-2 ms-1">
                     <div class="p-4">
                         <h3 class="text-xl font-bold text-gray-800">{{$product->name}}</h3>
@@ -179,20 +188,20 @@
                 </a>
                 
             </div>
-            <div class="flex w-full justify-center mt-24 text-center">
+            <div class="flex w-full justify-center mt-24 text-center observer-item fade-in-up">
                     <a href="{{ url('/menu') }}" class="inline-block bg-orange-400 text-white px-8 py-3 rounded-full hover:bg-orange-600 rounded-xl">Lihat Menunya</a>
             </div>
         </div>
     </section>
    
     <section id="konten" class="py-12 pb-32 bg-white">
-    <div class="container mx-auto px-6  md:px-12">
-        <h2 class="text-3xl font-bold text-gray-800 text-center mb-24">Tersedia juga di</h2>
+    <div class="container mx-auto px-6  md:px-12 ">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-24 observer-item fade-in-up">Tersedia juga di</h2>
         <div class="mt-16 flex justify-center gap-4">
            
             @foreach($kontens as $konten)
                 <!-- Konten Card -->
-                <a href="{{ $konten->isi_konten }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl">
+                <a href="{{ $konten->isi_konten }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl observer-item fade-in-up">
                     <div class="bg-white rounded-lg flex items-center">
                         <div class="w-64 p-4 flex mx-2">
                             <h3 class="text-xl font-bold text-gray-800 ms-2">{{ $konten->judul_konten }}</h3>
@@ -210,5 +219,25 @@
   <script src="{{ asset('assets/js/cart.js') }}"></script>
   <script src="{{ asset('assets/js/carousel.js') }}"></script>
   <x-cart />
+  <!-- Intersection Observer Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                  entry.target.classList.add('fade-in-up');
+              } else {
+                  entry.target.classList.remove('fade-in-up');
+              }
+          });
+      });
+
+      // Observe each product card
+      document.querySelectorAll('.observer-item').forEach(item => {
+          observer.observe(item);
+      });
+  });
+</script>
+
 </body>
 </html>
