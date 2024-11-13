@@ -267,25 +267,30 @@
             existingTitles.push(judul); // Tambahkan judul baru
         });
 
-        // Hapus Data Konten
-        $('.delete-btn').on('click', function(e) {
-            e.preventDefault();
-            var form = $(this).closest('form');
+        document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Cegah submit form langsung
 
+            const form = this.closest('.deleteForm'); // Ambil form terdekat dari tombol
+            const bannerId = this.getAttribute('data-id');
+
+            // SweetAlert konfirmasi
             Swal.fire({
-                title: 'Yakin ingin menghapus?',
-                text: "Data yang dihapus tidak dapat dikembalikan!",
+                title: 'Apakah Anda yakin?',
+                text: "Data ini akan dihapus dan tidak bisa dikembalikan!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Hapus'
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit();
+                    form.submit(); // Submit form jika user mengkonfirmasi
                 }
             });
         });
+    });
+
 
         // Kosongkan input saat modal ditutup
         $('#addContentModal').on('hidden.bs.modal', function() {
