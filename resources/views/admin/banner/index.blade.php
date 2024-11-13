@@ -292,6 +292,32 @@
                 reader.readAsDataURL(file);
             }
         });
+        
+        document.querySelectorAll('.deleteForm').forEach((form) => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Cegah submit form langsung
+
+            const button = form.querySelector('.delete-btn');
+            const id = button.getAttribute('data-id');
+
+            // Tampilkan konfirmasi SweetAlert
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah Anda yakin ingin menghapus banner ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Kirim form setelah konfirmasi
+                }
+            });
+        });
+    });
+
     
         // Validasi sebelum mengirim form
         document.getElementById('addContentForm').addEventListener('submit', function (event) {
