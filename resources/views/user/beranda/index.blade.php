@@ -200,7 +200,7 @@
           <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> <!-- Mengurangi gap -->
               @foreach($kontens as $konten)
                   <!-- Konten Card -->
-                  <a href="{{ $konten->isi_konten }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl observer-item fade-in-up w-full max-w-xs mx-auto">
+                  <a href="{{ $konten->isi_konten }}" class="group bg-orange-400 hover:bg-orange-600 shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl observer-item fade-in-up w-full max-w-xs mx-auto">
                       <div class="bg-white rounded-lg flex items-center justify-center h-full">
                           <div class="w-full p-4 flex justify-center">
                               <h3 class="text-xl font-bold text-gray-800 text-center">{{ $konten->judul_konten }}</h3> <!-- Menambahkan text-center pada h3 -->
