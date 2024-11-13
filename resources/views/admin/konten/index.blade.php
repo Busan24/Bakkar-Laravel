@@ -152,22 +152,28 @@
 <!-- Script untuk validasi form sebelum submit -->
 <script>
     $(document).ready(function() {
-        // Ambil semua judul konten yang ada
+        // Ambil semua judul konten yang ada dan ubah menjadi lowercase
         var existingTitles = [];
         @foreach($konten as $item)
-            existingTitles.push("{{ $item->judul_konten }}");
+            existingTitles.push("{{ $item->judul_konten }}".toLowerCase());
         @endforeach
+
+        // Fungsi untuk memeriksa apakah input adalah URL yang valid
+        function isValidURL(url) {
+            var pattern = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+            return pattern.test(url);
+        }
 
         // Validasi form tambah konten
         document.getElementById('addContentForm').addEventListener('submit', function(e) {
-            var judul = document.getElementById('judul_konten').value;
+            var judul = document.getElementById('judul_konten').value.toLowerCase();
             var isi = document.getElementById('isi_konten').value;
 
-            // Cek apakah judul sudah ada
+            // Cek apakah judul sudah ada (case insensitive)
             if (existingTitles.includes(judul)) {
                 e.preventDefault();
                 Swal.fire({
-                    icon: 'error',
+                    icon: 'warning',
                     title: 'Data Duplikat!',
                     text: 'Konten sudah ada. Silakan gunakan konten lain.',
                     confirmButtonColor: '#d33',
@@ -175,10 +181,23 @@
                 return;
             }
 
+            // Cek apakah link valid
+            if (!isValidURL(isi)) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Link Tidak Valid!',
+                    text: 'Mohon masukkan link Youtube yang valid.',
+                    confirmButtonColor: '#d33',
+                });
+                return;
+            }
+
+            // Cek apakah semua kolom diisi
             if (!judul || !isi) {
                 e.preventDefault();
                 Swal.fire({
-                    icon: 'error',
+                    icon: 'warning',
                     title: 'Oops...',
                     text: 'Semua kolom harus diisi!',
                     confirmButtonColor: '#d33',
@@ -187,10 +206,15 @@
         });
 
         // Edit Data Konten
+        var originalTitle = ""; // Variable to store the original title
+
         $('.edit-btn').on('click', function() {
             var id = $(this).data('id');
             var judul = $(this).data('judul');
             var isi = $(this).data('isi');
+
+            // Set the original title when opening the edit modal
+            originalTitle = judul.toLowerCase();
 
             $('#editContentModal').modal('show');
             $('#edit_judul_konten').val(judul);
@@ -198,25 +222,54 @@
             $('#editContentForm').attr('action', '/konten/' + id);
         });
 
-        // Validasi form sebelum simpan di edit
-        $('#editContentForm').on('submit', function(e) {
-            var judul = $('#edit_judul_konten').val();
-            var isi = $('#edit_isi_konten').val();
+        document.getElementById('editContentForm').addEventListener('submit', function(e) {
+            var judul = document.getElementById('edit_judul_konten').value.toLowerCase();
+            var isi = document.getElementById('edit_isi_konten').value;
 
+            // Cek apakah judul sudah ada (abaikan huruf kapital) dan bukan judul aslinya
+            if (judul !== originalTitle && existingTitles.includes(judul)) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Data Duplikat!',
+                    text: 'Konten sudah ada. Silakan gunakan konten lain.',
+                    confirmButtonColor: '#d33',
+                });
+                return;
+            }
+
+            // Cek apakah link valid
+            if (!isValidURL(isi)) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Link Tidak Valid!',
+                    text: 'Mohon masukkan link Youtube yang valid.',
+                    confirmButtonColor: '#d33',
+                });
+                return;
+            }
+
+            // Cek apakah semua kolom diisi
             if (!judul || !isi) {
                 e.preventDefault();
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Semua kolom harus diisi!',
+                    icon: 'warning',
+                    title: 'Form Tidak Lengkap!',
+                    text: 'Mohon isi semua kolom.',
+                    confirmButtonColor: '#d33',
                 });
+                return;
             }
+
+            // Jika validasi berhasil, perbarui `existingTitles`
+            existingTitles = existingTitles.filter(title => title !== originalTitle); // Hapus judul lama
+            existingTitles.push(judul); // Tambahkan judul baru
         });
 
         // Hapus Data Konten
         $('.delete-btn').on('click', function(e) {
             e.preventDefault();
-            var id = $(this).data('id');
             var form = $(this).closest('form');
 
             Swal.fire({
@@ -233,10 +286,9 @@
                 }
             });
         });
-    });
 
-    // Kosongkan input saat modal ditutup
-    $('#addContentModal').on('hidden.bs.modal', function() {
+        // Kosongkan input saat modal ditutup
+        $('#addContentModal').on('hidden.bs.modal', function() {
             $('#judul_konten').val('');
             $('#isi_konten').val('');
         });
@@ -245,7 +297,10 @@
             $('#edit_judul_konten').val('');
             $('#edit_isi_konten').val('');
         });
-    </script>
+    });
+</script>
+
+
 
 
 @if (session('success'))

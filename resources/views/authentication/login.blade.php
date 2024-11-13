@@ -29,8 +29,8 @@
   
           <div class="mt-4">
             <label for="remember_me" class="flex items-center">
-              <input type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" id="remember_me" name="remember" required="required"/>
-              <span class="ml-2 text-sm text-gray-600">Remember me</span>
+              <input type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" id="ceklis_saja" name="ceklis" required="required"/>
+              <span class="ml-2 text-sm text-gray-600">Ceklis Untuk Menyetujui Login</span>
             </label>
           </div>
   

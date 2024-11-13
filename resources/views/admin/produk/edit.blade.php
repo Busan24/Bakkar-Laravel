@@ -191,35 +191,14 @@
             </div>
     
         </div>
-    
 
-     
         <!-- End of Page Wrapper -->
     
         <!-- Scroll to Top Button-->
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
         </a>
-    
-        <!-- Logout Modal-->
-        {{-- <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        
-    
+
         <!-- Bootstrap core JavaScript-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="{{ asset('library/jquery/jquery.min.js') }}"></script>
@@ -232,51 +211,37 @@
         {{-- <script src="{{ asset('assets/js/sb-admin-2.min.js') }}"></script>
         <script src="{{ asset('assets/js/post_create.js') }}"></script> --}}
         <script src="//cdn.ckeditor.com/4.22.1/basic/ckeditor.js"></script>
+        <script src="{{ asset('assets/js/keamanan.js') }}"></script>
                 
         <script>
-            // Fungsi untuk memvalidasi input harga produk
             function validatePriceInput() {
-                const hargaInput = document.getElementById('harga');
-                let hargaValue = hargaInput.value.trim();
-        
-                // Hapus semua karakter selain angka dan titik
-                const validHargaValue = hargaValue.replace(/[^0-9.]/g, '');
-        
-                // Periksa apakah ada lebih dari satu titik
-                if ((validHargaValue.match(/\./g) || []).length > 1) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Harga Tidak Valid',
-                        text: 'Harga produk tidak boleh memiliki titik',
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                    });
-                    hargaInput.value = ''; // Clear the input value
-                    return false;
-                }
-        
-                // Periksa apakah harga yang dimasukkan hanya angka atau angka dengan satu titik desimal
-                if (isNaN(validHargaValue) || validHargaValue === '') {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Harga Tidak Valid',
-                        text: 'Harga produk harus berupa angka yang valid.',
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                    });
-                    hargaInput.value = ''; // Clear the input value
-                    return false;
-                }
-        
-                // Jika harga valid, set input dengan nilai yang benar
-                hargaInput.value = validHargaValue;
-                return true;
+            const hargaInput = document.getElementById('harga');
+            let hargaValue = hargaInput.value.trim();
+
+            // Hapus semua karakter selain angka
+            const validHargaValue = hargaValue.replace(/[^0-9]/g, '');
+            const hargaAngka = parseInt(validHargaValue, 10);
+
+            // Batasi harga maksimal 500,000
+            if (hargaAngka > 500000) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Harga Melebihi Batas',
+                    text: 'Pastikan nominal harga di bawah 500,000.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+                hargaInput.value = '';
+                return false;
             }
-        
-            // Menambahkan event listener untuk memvalidasi input harga sebelum submit
-            document.getElementById('harga').addEventListener('input', validatePriceInput);
-        
-            // Fungsi validasi form sebelum submit
+
+            hargaInput.value = validHargaValue;
+            return true;
+        }
+        // Menambahkan event listener untuk memvalidasi input harga sebelum submit
+        document.getElementById('harga').addEventListener('input', validatePriceInput);
+
+       // Fungsi validasi form sebelum submit
             function validateForm(event) {
                 event.preventDefault(); // Mencegah submit form langsung
         
@@ -317,12 +282,12 @@
                     });
                     return false;
                 }
-        
+
                 // Gambar tidak wajib diunggah jika gambar lama masih ada
                 if (gambarProduk === 0 && !oldGambarProduk) {
                     errorMessages.push("Gambar produk harus diunggah.");
                 }
-        
+
                 // Jika ada error, tampilkan SweetAlert2 dan hentikan proses submit
                 if (errorMessages.length > 0) {
                     Swal.fire({
@@ -437,6 +402,16 @@
             // Tambahkan event listener untuk gambar baru
             document.getElementById('gambar_produk').addEventListener('change', previewImage);
         </script>
+        @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Memperbarui Produk',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK',
+            });
+        </script>
+    @endif
         
-                                
 @endsection

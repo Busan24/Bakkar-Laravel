@@ -195,24 +195,23 @@
     </section>
    
     <section id="konten" class="py-12 pb-32 bg-white">
-    <div class="container mx-auto px-6  md:px-12 ">
-        <h2 class="text-3xl font-bold text-gray-800 text-center mb-24 observer-item fade-in-up">Tersedia juga di</h2>
-        <div class="mt-16 flex justify-center gap-4">
-           
-            @foreach($kontens as $konten)
-                <!-- Konten Card -->
-                <a href="{{ $konten->isi_konten }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl observer-item fade-in-up">
-                    <div class="bg-white rounded-lg flex items-center">
-                        <div class="w-64 p-4 flex mx-2">
-                            <h3 class="text-xl font-bold text-gray-800 ms-2">{{ $konten->judul_konten }}</h3>
-                        </div>
-                    </div>
-                </a>
-            @endforeach
-
-        </div>
-    </div>
-</section>
+      <div class="container mx-auto px-6 md:px-12">
+          <h2 class="text-3xl font-bold text-gray-800 text-center mb-24 observer-item fade-in-up">Tersedia juga di</h2>
+          <div class="mt-16 flex flex-col sm:flex-row flex-wrap justify-center gap-4">
+              @foreach($kontens as $konten)
+                  <!-- Konten Card -->
+                  <a href="{{ $konten->isi_konten }}" class="group bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105 hover:shadow-xl observer-item fade-in-up w-full sm:w-auto">
+                      <div class="bg-white rounded-lg flex items-center">
+                          <div class="w-full p-4 flex mx-2 justify-center sm:justify-start">
+                              <h3 class="text-xl font-bold text-gray-800 ms-2 text-center sm:text-left">{{ $konten->judul_konten }}</h3>
+                          </div>
+                      </div>
+                  </a>
+              @endforeach
+          </div>
+      </div>
+  </section>
+  
 
   <!-- Footer -->
   <x-footer />

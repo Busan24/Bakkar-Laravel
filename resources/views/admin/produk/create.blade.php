@@ -203,8 +203,37 @@
         {{-- <script src="{{ asset('assets/js/sb-admin-2.min.js') }}"></script>
         <script src="{{ asset('assets/js/post_create.js') }}"></script> --}}
         <script src="//cdn.ckeditor.com/4.22.1/basic/ckeditor.js"></script>
+        <script src="{{ asset('assets/js/keamanan.js') }}"></script>
                 
         <script>
+            function validatePriceInput() {
+            const hargaInput = document.getElementById('harga');
+            let hargaValue = hargaInput.value.trim();
+
+            // Hapus semua karakter selain angka
+            const validHargaValue = hargaValue.replace(/[^0-9]/g, '');
+            const hargaAngka = parseInt(validHargaValue, 10);
+
+            // Batasi harga maksimal 500,000
+            if (hargaAngka > 500000) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Harga Melebihi Batas',
+                    text: 'Pastikan nominal harga di bawah 500,000.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+                hargaInput.value = '';
+                return false;
+            }
+
+            hargaInput.value = validHargaValue;
+            return true;
+        }
+        // Menambahkan event listener untuk memvalidasi input harga sebelum submit
+        document.getElementById('harga').addEventListener('input', validatePriceInput);
+
+
             // Fungsi validasi form sebelum submit
             function validateForm(event) {
                 event.preventDefault(); // Mencegah submit form langsung

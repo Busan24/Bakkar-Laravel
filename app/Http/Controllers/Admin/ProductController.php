@@ -92,47 +92,47 @@ public function edit($id)
     ]);
 }
 
-public function update(Request $request, $id)
-{
-    // Validasi input form
-    $validated = $request->validate([
-        'nama-produk' => 'required|string|max:255',
-        'kategori_produk' => 'required|exists:categories,id',
-        'deskripsi-produk' => 'required|string',
-        'harga-produk' => 'required|numeric|min:0',
-        'gambar_produk' => 'nullable|image|mimes:jpeg,png,jpg,gif',  // Gambar tidak wajib diunggah jika tidak ada
-    ]);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama-produk' => 'required|max:255',
+            'kategori_produk' => 'required',
+            'deskripsi-produk' => 'required',
+            'harga-produk' => 'required|numeric',
+            'gambar_produk' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
 
-    // Temukan produk berdasarkan ID
-    $product = Product::findOrFail($id);
+        // Cek apakah nama produk yang baru sudah ada di database, kecuali produk yang sedang diedit
+        $existingProduct = Product::where('name', $request->input('nama-produk'))
+            ->where('id', '!=', $id)  // Tidak termasuk produk yang sedang diupdate
+            ->first();
 
-    // Update data produk tanpa mengganti gambar jika tidak ada gambar baru
-    $product->name = $request->input('nama-produk');
-    $product->category_id = $request->input('kategori_produk');
-    $product->description = $request->input('deskripsi-produk');
-    $product->price = $request->input('harga-produk');
-
-    // Periksa apakah ada gambar baru yang diunggah
-    if ($request->hasFile('gambar_produk')) {
-        // Hapus gambar lama jika ada gambar baru
-        if ($product->photo) {
-            Storage::disk('public')->delete($product->photo);
+        if ($existingProduct) {
+            // Jika produk sudah ada, beri alert dan kembali ke halaman edit
+            return redirect()->route('edit', $id)
+                ->with('error', 'Produk Duplikat (produk udah ada).');
         }
 
-        // Simpan gambar baru
-        $imagePath = $request->file('gambar_produk')->store('produk_images', 'public');
-        $product->photo = $imagePath;
-    } elseif ($request->input('old_gambar_produk')) {
-        // Jika tidak ada gambar baru, gunakan gambar lama yang ada
-        $product->photo = $request->input('old_gambar_produk');
+        // Proses update data produk
+        $product = Product::findOrFail($id);
+        $product->name = $request->input('nama-produk');
+        $product->category_id = $request->input('kategori_produk');
+        $product->description = $request->input('deskripsi-produk');
+        $product->price = $request->input('harga-produk');
+
+        // Proses gambar jika ada
+        if ($request->hasFile('gambar_produk')) {
+            $imagePath = $request->file('gambar_produk')->store('images', 'public');
+            $product->photo = $imagePath;
+        } else {
+            $product->photo = $request->input('old_gambar_produk');
+        }
+
+        $product->save();
+
+        return redirect()->route('produk')->with('success', 'Produk berhasil diperbarui!');
     }
 
-    // Simpan perubahan produk
-    $product->save();
-
-    // Redirect dengan pesan sukses
-    return redirect()->route('produk')->with('success', 'Produk berhasil diperbarui!');
-}
 
 public function destroy($id)
 {
